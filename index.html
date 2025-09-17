@@ -1,0 +1,281 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Ai×CJC OSedu1.0</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+      body {
+        font-family: 'Inter', sans-serif;
+        background-color: transparent;
+      }
+      :root {
+        --text-main-color: #000000;
+        --text-shadow-color: rgba(255,255,255,0.5);
+      }
+      .dark:root {
+        --text-main-color: #FFFFFF;
+        --text-shadow-color: rgba(0,0,0,0.7);
+      }
+
+      #system-background {
+        position: fixed;
+        inset: 0;
+        z-index: -1;
+        background-size: cover;
+        background-position: center;
+        transition: background-image 0.5s ease-in-out, background-color 0.5s ease-in-out;
+      }
+
+      @keyframes fadeInUp {
+        from {
+          opacity: 0;
+          transform: translate(-50%, 10px);
+        }
+        to {
+          opacity: 1;
+          transform: translate(-50%, 0);
+        }
+      }
+      .animate-fade-in-up {
+        animation: fadeInUp 0.2s ease-out forwards;
+      }
+
+      /* --- NEW ANIMATIONS --- */
+      @keyframes fadeOutDown {
+        from {
+          opacity: 1;
+          transform: translate(-50%, 0);
+        }
+        to {
+          opacity: 0;
+          transform: translate(-50%, 10px);
+        }
+      }
+      .animate-fade-out-down {
+        animation: fadeOutDown 0.2s ease-in forwards;
+      }
+
+      @keyframes windowEnter {
+        from {
+          opacity: 0;
+          transform: scale(0.95) translateY(10px);
+        }
+        to {
+          opacity: 1;
+          transform: scale(1) translateY(0);
+        }
+      }
+      .animate-window-enter {
+        animation: windowEnter 0.25s cubic-bezier(0.25, 1, 0.5, 1) forwards;
+      }
+
+      @keyframes windowExit {
+        from {
+          opacity: 1;
+          transform: scale(1) translateY(0);
+        }
+        to {
+          opacity: 0;
+          transform: scale(0.95) translateY(10px);
+        }
+      }
+      .animate-window-exit {
+        animation: windowExit 0.2s ease-in forwards;
+      }
+
+      @keyframes fadeIn {
+        from { opacity: 0; transform: translateY(20px); }
+        to { opacity: 1; transform: translateY(0); }
+      }
+      .animate-fade-in {
+        animation: fadeIn 0.8s ease-in-out forwards;
+        opacity: 0;
+      }
+      .delay-1 { animation-delay: 0.2s; }
+      .delay-2 { animation-delay: 0.4s; }
+      .delay-3 { animation-delay: 0.6s; }
+      /* --- END NEW ANIMATIONS --- */
+      
+      .taskbar-background,
+      .window-background {
+        background: linear-gradient(135deg, rgba(255, 255, 255, 0.25) 0%, rgba(255, 255, 255, 0.05) 100%);
+        border: 1px solid rgba(255, 255, 255, 0.3);
+        backdrop-filter: blur(20px);
+        -webkit-backdrop-filter: blur(20px);
+        box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+      }
+      
+      .dark .taskbar-background,
+      .dark .window-background {
+        background: linear-gradient(135deg, rgba(255, 255, 255, 0.1) 0%, rgba(255, 255, 255, 0.05) 100%);
+        border: 1px solid rgba(255, 255, 255, 0.18);
+        box-shadow: 0 4px 30px rgba(0, 0, 0, 0.2);
+      }
+
+
+      /* --- Jelly Button Styles --- */
+      .jelly-button {
+        /* Core glass properties */
+        background-color: rgba(255, 255, 255, 0.12);
+        border: 1px solid rgba(255, 255, 255, 0.25);
+        backdrop-filter: blur(24px);
+        -webkit-backdrop-filter: blur(24px);
+
+        /* Shadow for depth and top-edge glow */
+        box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15), 
+                    inset 0 1.5px 1px rgba(255, 255, 255, 0.8);
+        
+        /* Base button properties */
+        border-radius: 16px;
+        transition: all 0.25s cubic-bezier(0.2, 0.8, 0.2, 1);
+        position: relative;
+        overflow: hidden;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        -webkit-tap-highlight-color: transparent;
+        outline: none;
+      }
+
+      .dark .jelly-button {
+        background-color: rgba(255, 255, 255, 0.06);
+        border-color: rgba(255, 255, 255, 0.12);
+        box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3), 
+                    inset 0 1.5px 1px rgba(255, 255, 255, 0.15);
+      }
+
+      /* Shimmer on hover - keeping this nice detail */
+      .jelly-button::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: -150%;
+        width: 75%;
+        height: 100%;
+        background: linear-gradient(
+          to right,
+          rgba(255, 255, 255, 0) 0%,
+          rgba(255, 255, 255, 0.35) 50%,
+          rgba(255, 255, 255, 0) 100%
+        );
+        transform: skewX(-25deg);
+        transition: left 0.9s cubic-bezier(0.23, 1, 0.32, 1);
+      }
+      
+      .jelly-button:hover::before {
+        left: 150%;
+      }
+
+      /* Hover State - lift and glow */
+      .jelly-button:hover {
+        transform: translateY(-3px);
+        background-color: rgba(255, 255, 255, 0.18);
+        border-color: rgba(255, 255, 255, 0.3);
+        box-shadow: 0 12px 32px rgba(0, 0, 0, 0.2),
+                    inset 0 1.5px 1px rgba(255, 255, 255, 0.9);
+      }
+      
+      .dark .jelly-button:hover {
+        transform: translateY(-3px);
+        background-color: rgba(255, 255, 255, 0.1);
+        border-color: rgba(255, 255, 255, 0.18);
+        box-shadow: 0 12px 32px rgba(0, 0, 0, 0.4),
+                    inset 0 1.5px 1px rgba(255, 255, 255, 0.2);
+      }
+      
+      /* Focus State for accessibility */
+      .jelly-button:focus-visible {
+        outline: 2px solid #6b7280; /* Tailwind's gray-500 */
+        outline-offset: 3px;
+      }
+
+      /* Active State - press-in effect */
+      .jelly-button:active {
+        transform: translateY(0px) scale(0.97);
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2), 
+                    inset 0 2px 4px rgba(0, 0, 0, 0.25);
+        transition-duration: 0.1s;
+      }
+      
+      .dark .jelly-button:active {
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.4), 
+                    inset 0 3px 6px rgba(0, 0, 0, 0.4);
+      }
+
+      /* --- CUSTOM TEXT STYLE --- */
+      .text-outline {
+        color: var(--text-main-color);
+        text-shadow: 0 1px 2px var(--text-shadow-color), 0 0 2px var(--text-shadow-color);
+      }
+      .placeholder-outline::placeholder {
+        color: #d1d5db; /* gray-300 */
+        text-shadow: 0 1px 2px var(--text-shadow-color), 0 0 2px var(--text-shadow-color);
+        opacity: 1;
+      }
+
+      /* --- WIDGET STYLES --- */
+      .widget-panel {
+        transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        transform: translateX(-100%);
+      }
+      .widget-panel.open {
+        transform: translateX(0);
+      }
+      .widget-preview {
+        cursor: grab;
+        transition: transform 0.2s ease, box-shadow 0.2s ease;
+      }
+      .widget-preview:hover {
+        transform: scale(1.05);
+        box-shadow: 0 8px 30px rgba(0, 0, 0, 0.15);
+      }
+      .widget-preview:active {
+        cursor: grabbing;
+        transform: scale(1.02);
+      }
+      .desktop-widget-wrapper {
+        transition: opacity 0.2s ease;
+      }
+
+      /* --- INFORMATION STATION STYLES --- */
+      .information-station {
+        transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        transform: translateX(100%);
+      }
+      .information-station.open {
+        transform: translateX(0);
+      }
+      .drop-target-active {
+        outline: 2px dashed #3b82f6; /* blue-500 */
+        outline-offset: -4px;
+        background-color: rgba(59, 130, 246, 0.1);
+      }
+    </style>
+  <script type="importmap">
+{
+  "imports": {
+    "react": "https://esm.sh/react@^19.1.0",
+    "react-dom/": "https://esm.sh/react-dom@^19.1.0/",
+    "react/": "https://esm.sh/react@^19.1.0/",
+    "@google/genai": "https://esm.sh/@google/genai",
+    "firebase/app": "https://esm.sh/firebase@10.12.2/app",
+    "firebase/auth": "https://esm.sh/firebase@10.12.2/auth",
+    "firebase/firestore": "https://esm.sh/firebase@10.12.2/firestore",
+    "uuid": "https://esm.sh/uuid@9.0.1",
+    "firebase/": "https://aistudiocdn.com/firebase@^12.2.1/"
+  }
+}
+</script>
+</head>
+  <body>
+    <div id="system-background"></div>
+    <div id="root"></div>
+    <script type="module" src="/index.tsx"></script>
+  </body>
+</html>
