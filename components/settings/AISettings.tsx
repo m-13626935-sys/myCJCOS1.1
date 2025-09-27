@@ -41,7 +41,7 @@ const AISettings: React.FC<Partial<AppProps>> = ({ aiSettings, setAiSettings }) 
         <div className="h-full flex flex-col">
             <h2 className="text-2xl font-bold mb-6">{t('settings_ai_category')}</h2>
             <div className="space-y-6">
-                <div className="bg-white/5 dark:bg-black/10 p-4 rounded-xl ring-1 ring-black/10 dark:ring-white/10">
+                <div className="bg-white/5 dark:bg-black/10 p-4 rounded-2xl ring-1 ring-black/10 dark:ring-white/10">
                     <ToggleSwitch
                         checked={aiSettings.isEnabled}
                         onChange={() => handleToggle('isEnabled')}
@@ -51,7 +51,7 @@ const AISettings: React.FC<Partial<AppProps>> = ({ aiSettings, setAiSettings }) 
                 </div>
                 
                 <div className={`transition-opacity ${!aiSettings.isEnabled ? 'opacity-50 pointer-events-none' : ''}`}>
-                    <div className="bg-white/5 dark:bg-black/10 p-4 rounded-xl ring-1 ring-black/10 dark:ring-white/10 mb-6">
+                    <div className="bg-white/5 dark:bg-black/10 p-4 rounded-2xl ring-1 ring-black/10 dark:ring-white/10 mb-6">
                         <ToggleSwitch
                             checked={aiSettings.memoryEnabled}
                             onChange={() => handleToggle('memoryEnabled')}
@@ -60,7 +60,7 @@ const AISettings: React.FC<Partial<AppProps>> = ({ aiSettings, setAiSettings }) 
                         />
                     </div>
 
-                    <div className="bg-white/5 dark:bg-black/10 p-4 rounded-xl ring-1 ring-black/10 dark:ring-white/10 mb-6">
+                    <div className="bg-white/5 dark:bg-black/10 p-4 rounded-2xl ring-1 ring-black/10 dark:ring-white/10 mb-6">
                         <ToggleSwitch
                             checked={aiSettings.appIntegrationsEnabled}
                             onChange={() => handleToggle('appIntegrationsEnabled')}
@@ -69,7 +69,7 @@ const AISettings: React.FC<Partial<AppProps>> = ({ aiSettings, setAiSettings }) 
                         />
                     </div>
 
-                    <div className="bg-white/5 dark:bg-black/10 p-4 rounded-xl ring-1 ring-black/10 dark:ring-white/10">
+                    <div className="bg-white/5 dark:bg-black/10 p-4 rounded-2xl ring-1 ring-black/10 dark:ring-white/10">
                         <h4 className="font-semibold">{t('settings_ai_integrations_title')}</h4>
                         <p className="text-sm opacity-70 mb-4">{t('settings_ai_integrations_desc')}</p>
                         <ul className="space-y-2 text-sm list-disc list-inside pl-2 opacity-90">

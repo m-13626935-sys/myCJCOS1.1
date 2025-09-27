@@ -1,3 +1,4 @@
+
 import React, { useState, useMemo, useRef, useCallback, useEffect } from 'react';
 import { useLanguage } from '../contexts/LanguageContext';
 
@@ -51,8 +52,19 @@ const CalendarPopup: React.FC<CalendarPopupProps> = ({ onClose }) => {
   }, [year, month]);
 
   const handleDayClick = (day: Date) => {
-    // Check for March 21, 2014
-    if (day.getFullYear() === 2014 && day.getMonth() === 2 && day.getDate() === 21) {
+    const clickedYear = day.getFullYear();
+    const month = day.getMonth(); // 0-indexed
+    const date = day.getDate();
+    
+    const isBirthday = (
+        (clickedYear === 2014 && month === 2 && date === 21) || // 郑家诚 - March 21
+        (clickedYear === 2014 && month === 4 && date === 8)  || // 凌珮淇 - May 8
+        (clickedYear === 2014 && month === 4 && date === 17) || // 嘉胜 - May 17
+        (clickedYear === 2014 && month === 6 && date === 4)  || // 蔡卓昇 - July 4
+        (clickedYear === 2014 && month === 6 && date === 14)    // 蔡卓昇 - July 14
+    );
+
+    if (isBirthday) {
         setIsEasterEgg(true);
     } else {
         if (isEasterEgg) {
@@ -182,7 +194,7 @@ const CalendarPopup: React.FC<CalendarPopupProps> = ({ onClose }) => {
   
   const renderHeader = () => (
       <div className="flex justify-between items-center px-1 mb-2">
-        <button onClick={handleOpenPicker} className="text-xl font-semibold hover:bg-white/10 rounded-md px-3 py-2 transition-colors">
+        <button onClick={handleOpenPicker} className="text-xl font-semibold hover:bg-white/10 rounded-xl px-3 py-2 transition-colors">
             {`${year}${t('calendar_year_suffix')} ${MONTH_NAMES[month]}`}
         </button>
         <div className="flex items-center gap-1">
@@ -241,7 +253,7 @@ const CalendarPopup: React.FC<CalendarPopupProps> = ({ onClose }) => {
                         type="number"
                         value={inputYear}
                         onChange={(e) => setInputYear(e.target.value)}
-                        className="w-full p-3 text-lg rounded-md bg-white/10 dark:bg-black/20 border border-black/10 dark:border-white/10 focus:outline-none focus:ring-2 focus:ring-gray-500 text-outline placeholder-outline"
+                        className="w-full p-3 text-lg rounded-xl bg-white/10 dark:bg-black/20 border border-black/10 dark:border-white/10 focus:outline-none focus:ring-2 focus:ring-gray-500 text-outline placeholder-outline"
                         min={MIN_YEAR}
                         max={MAX_YEAR}
                     />
@@ -252,7 +264,7 @@ const CalendarPopup: React.FC<CalendarPopupProps> = ({ onClose }) => {
                         id="month-input"
                         value={inputMonth}
                         onChange={(e) => setInputMonth(parseInt(e.target.value, 10))}
-                        className="w-full p-3 text-lg rounded-md bg-white/10 dark:bg-black/20 border border-black/10 dark:border-white/10 focus:outline-none focus:ring-2 focus:ring-gray-500 text-outline"
+                        className="w-full p-3 text-lg rounded-xl bg-white/10 dark:bg-black/20 border border-black/10 dark:border-white/10 focus:outline-none focus:ring-2 focus:ring-gray-500 text-outline"
                     >
                         {MONTH_NAMES.map((name, index) => (
                             <option key={name} value={index} className="bg-gray-700 text-white">{name}</option>
@@ -261,8 +273,8 @@ const CalendarPopup: React.FC<CalendarPopupProps> = ({ onClose }) => {
                  </div>
               </div>
               <div className="flex justify-end items-center gap-2 mt-4">
-                 <button onClick={() => setIsPickingDate(false)} className="px-6 py-3 text-base font-medium hover:bg-white/10 rounded-lg transition-colors">{t('calendar_back')}</button>
-                 <button onClick={handleJumpToDate} className="px-6 py-3 text-base font-semibold bg-blue-600 hover:bg-blue-500 rounded-lg transition-colors">{t('calendar_jump')}</button>
+                 <button onClick={() => setIsPickingDate(false)} className="px-6 py-3 text-base font-medium hover:bg-white/10 rounded-xl transition-colors">{t('calendar_back')}</button>
+                 <button onClick={handleJumpToDate} className="px-6 py-3 text-base font-semibold bg-blue-600 hover:bg-blue-500 rounded-xl transition-colors">{t('calendar_jump')}</button>
               </div>
           </div>
       );
@@ -288,7 +300,7 @@ const CalendarPopup: React.FC<CalendarPopupProps> = ({ onClose }) => {
   return (
     <div 
         onWheel={handleWheel}
-        className="absolute bottom-full right-0 mb-2 w-[420px] h-[600px] max-h-[80vh] taskbar-background backdrop-blur-3xl ring-1 ring-black/10 dark:ring-white/10 rounded-xl shadow-2xl p-4 flex flex-col animate-fade-in-up text-outline">
+        className="absolute bottom-full right-0 mb-2 w-[420px] h-[600px] max-h-[80vh] taskbar-background backdrop-blur-3xl ring-1 ring-black/10 dark:ring-white/10 rounded-2xl shadow-2xl p-4 flex flex-col animate-fade-in-up text-outline">
         {isEasterEgg ? renderEasterEggView() : (isPickingDate ? renderDatePicker() : renderCalendarView())}
     </div>
   );

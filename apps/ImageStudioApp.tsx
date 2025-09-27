@@ -28,21 +28,6 @@ const ImageStudioApp: React.FC<Partial<AppProps>> = ({ setWallpaper }) => {
       setIsLoading(false);
     }
   };
-  
-  const handleDrop = (e: React.DragEvent) => {
-    e.preventDefault();
-    const dataString = e.dataTransfer.getData('application/cjc-os-item');
-    if (dataString) {
-        try {
-            const data = JSON.parse(dataString);
-            if (data.type === 'text' && typeof data.content === 'string') {
-                setPrompt(prev => prev ? `${prev} ${data.content}` : data.content);
-            }
-        } catch (err) {
-            console.error("Failed to parse dropped item data:", err);
-        }
-    }
-  };
 
   return (
     <div className="h-full flex flex-col text-outline">
@@ -52,15 +37,13 @@ const ImageStudioApp: React.FC<Partial<AppProps>> = ({ setWallpaper }) => {
           value={prompt}
           onChange={(e) => setPrompt(e.target.value)}
           placeholder={t('image_studio_placeholder')}
-          className="flex-grow p-2 rounded-l-md bg-white/20 dark:bg-black/20 backdrop-blur-md text-outline placeholder-outline border-0 focus:outline-none focus:ring-2 focus:ring-gray-500 dark:focus:ring-gray-400 ring-1 ring-inset ring-white/50 dark:ring-white/20"
+          className="flex-grow p-2 rounded-l-xl bg-white/20 dark:bg-black/20 backdrop-blur-md text-outline placeholder-outline border-0 focus:outline-none focus:ring-2 focus:ring-gray-500 dark:focus:ring-gray-400 ring-1 ring-inset ring-white/50 dark:ring-white/20"
           disabled={isLoading}
-          onDrop={handleDrop}
-          onDragOver={(e) => e.preventDefault()}
         />
         <button
           type="submit"
           disabled={isLoading || !prompt.trim()}
-          className="px-4 py-2 bg-black/20 dark:bg-white/20 text-outline rounded-r-md ring-1 ring-inset ring-white/30 dark:ring-black/30 shadow-lg hover:bg-black/30 dark:hover:bg-white/30 active:shadow-inner active:scale-95 transition-all duration-150 disabled:bg-black/10 disabled:dark:bg-white/10 disabled:shadow-none disabled:cursor-not-allowed"
+          className="px-4 py-2 bg-black/20 dark:bg-white/20 text-outline rounded-r-xl ring-1 ring-inset ring-white/30 dark:ring-black/30 shadow-lg hover:bg-black/30 dark:hover:bg-white/30 active:shadow-inner active:scale-95 transition-all duration-150 disabled:bg-black/10 disabled:dark:bg-white/10 disabled:shadow-none disabled:cursor-not-allowed"
         >
           {isLoading ? (
             <svg className="animate-spin h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
@@ -71,7 +54,7 @@ const ImageStudioApp: React.FC<Partial<AppProps>> = ({ setWallpaper }) => {
         </button>
       </form>
       
-      <div className="flex-grow flex items-center justify-center bg-black/5 dark:bg-black/20 rounded-lg p-2">
+      <div className="flex-grow flex items-center justify-center bg-black/5 dark:bg-black/20 rounded-2xl p-2">
         {isLoading && <div className="opacity-70">{t('image_studio_generating')}</div>}
         {error && <div className="text-outline p-4 text-center">{error}</div>}
         {imageUrl && !isLoading && (
@@ -79,14 +62,14 @@ const ImageStudioApp: React.FC<Partial<AppProps>> = ({ setWallpaper }) => {
                 <img 
                     src={imageUrl} 
                     alt={prompt} 
-                    className="w-full h-full object-contain rounded-lg"
+                    className="w-full h-full object-contain rounded-xl"
                     draggable={false}
                 />
                 {setWallpaper && (
-                    <div className="absolute inset-0 bg-black/60 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300 rounded-lg">
+                    <div className="absolute inset-0 bg-black/60 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300 rounded-xl">
                         <button
                             onClick={() => setWallpaper(imageUrl!)}
-                            className="px-4 py-2 text-outline font-semibold bg-black/40 rounded-lg border border-white/50 backdrop-blur-sm hover:bg-white/20 transition-all duration-200"
+                            className="px-4 py-2 text-outline font-semibold bg-black/40 rounded-xl border border-white/50 backdrop-blur-sm hover:bg-white/20 transition-all duration-200"
                         >
                             {t('image_studio_set_wallpaper')}
                         </button>

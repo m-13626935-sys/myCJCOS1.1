@@ -133,13 +133,6 @@ export interface CalendarEvent {
   color: string;
 }
 
-// FIX: Add missing BusItem type for InformationBusStation.tsx
-export interface BusItem {
-  id: string;
-  type: 'text';
-  content: string;
-}
-
 // --- SLIDES APP TYPES ---
 export interface TextStyle {
     fontSize: number;

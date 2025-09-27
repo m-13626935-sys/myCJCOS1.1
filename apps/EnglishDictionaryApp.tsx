@@ -9,14 +9,14 @@ const STORAGE_KEY = 'english_dictionary_last_state';
 interface DictionaryState {
     query: string;
     result: EnglishDictionaryEntry | null;
-    isEasterEgg: boolean;
+    easterEggMessage: string | null;
     error: string | null;
 }
 
 const initialState: DictionaryState = {
     query: '',
     result: null,
-    isEasterEgg: false,
+    easterEggMessage: null,
     error: null,
 };
 
@@ -34,18 +34,18 @@ const Section: React.FC<{ title: string; children: React.ReactNode }> = ({ title
     </div>
 );
 
-// 彩蛋名字列表（不区分大小写）
-const EASTER_EGG_NAMES = [
-    'chung jia cheng',
-    'poo yi xuan',
-    'brandon wong zu le',
-    'carson john ahoi',
-    'chai zhuo sheng',
-    'go hao ze',
-    'lin pei qi',
-    'soo jia yang',
-    'yim fu xing'
-];
+const EASTER_EGG_MESSAGES: Record<string, string> = {
+    'chung jia cheng': 'CJC 操作系统作者郑家诚生日快乐！',
+    'poo yi xuan': '浦宜璇生日快乐！',
+    'brandon wong zu le': '黄祖乐生日快乐！',
+    'carson john ahoi': '嘉胜生日快乐！',
+    'chai zhuo sheng': '蔡卓昇生日快乐！',
+    'go hao ze': '吴昊泽生日快乐！',
+    'lin pei qi': '凌珮淇生日快乐！',
+    'soo jia yang': '苏家扬生日快乐！',
+    'yim fu xing': '严富城生日快乐！'
+};
+
 
 const EnglishDictionaryApp: React.FC = () => {
     const { t } = useLanguage();
@@ -59,7 +59,7 @@ const EnglishDictionaryApp: React.FC = () => {
     });
 
     const [isLoading, setIsLoading] = useState(false);
-    const { query, result, isEasterEgg, error } = state;
+    const { query, result, easterEggMessage, error } = state;
 
      useEffect(() => {
         try {
@@ -74,15 +74,16 @@ const EnglishDictionaryApp: React.FC = () => {
         if (!query.trim() || isLoading) return;
 
         setIsLoading(true);
-        setState(s => ({ ...s, error: null, result: null, isEasterEgg: false }));
+        setState(s => ({ ...s, error: null, result: null, easterEggMessage: null }));
 
         try {
             const normalizedQuery = query.trim().toLowerCase();
-            if (EASTER_EGG_NAMES.includes(normalizedQuery)) {
-                setState(s => ({ ...s, isEasterEgg: true }));
+            const message = EASTER_EGG_MESSAGES[normalizedQuery];
+            if (message) {
+                setState(s => ({ ...s, easterEggMessage: message }));
             } else {
                 const data = await geminiService.getEnglishDictionaryEntry(normalizedQuery);
-                setState(s => ({ ...s, result: data, isEasterEgg: false }));
+                setState(s => ({ ...s, result: data, easterEggMessage: null }));
             }
         } catch (err) {
             console.error('English Dictionary error:', err);
@@ -90,19 +91,6 @@ const EnglishDictionaryApp: React.FC = () => {
             setState(s => ({ ...s, error: errorMessage }));
         } finally {
             setIsLoading(false);
-        }
-    };
-    
-    const handleDrop = (e: React.DragEvent) => {
-        e.preventDefault();
-        const dataString = e.dataTransfer.getData('application/cjc-os-item');
-        if (dataString) {
-            try {
-                const data = JSON.parse(dataString);
-                if (data.type === 'text' && typeof data.content === 'string') {
-                    setState(s => ({ ...s, query: s.query ? `${s.query} ${data.content}` : data.content }));
-                }
-            } catch (err) { console.error("Drop error:", err); }
         }
     };
 
@@ -117,8 +105,6 @@ const EnglishDictionaryApp: React.FC = () => {
                         placeholder={t('dictionary_placeholder_english')}
                         className="flex-grow p-3 text-lg rounded-l-md bg-white/20 dark:bg-black/20 backdrop-blur-md text-outline placeholder-outline border-0 focus:outline-none focus:ring-2 focus:ring-gray-500 dark:focus:ring-gray-400 ring-1 ring-inset ring-white/50 dark:ring-white/20"
                         disabled={isLoading}
-                        onDrop={handleDrop}
-                        onDragOver={(e) => e.preventDefault()}
                     />
                     <button
                         type="submit"
@@ -138,7 +124,7 @@ const EnglishDictionaryApp: React.FC = () => {
             <main className="flex-grow overflow-y-auto pr-2 -mr-4 pb-2">
                 {error && <div className="text-center p-4 bg-red-500/20 text-outline rounded-lg">{error}</div>}
                 
-                {!isLoading && !result && !error && !isEasterEgg && (
+                {!isLoading && !result && !error && !easterEggMessage && (
                     <div className="h-full flex flex-col items-center justify-center text-center text-outline opacity-70">
                          <svg xmlns="http://www.w3.org/2000/svg" className="w-24 h-24 opacity-20" viewBox="0 0 24 24" fill="currentColor"><path d="M4,9H7V4H4V9M10.5,4V9H13.5V4H10.5M4,15H7V20H4V15M17,11.25L13.5,15V20H10.5V15L7,11.25V10H17V11.25M17,4V9H20V4H17Z" /></svg>
                         <h2 className="text-xl font-semibold mt-4">{t('dictionary_initial_title_english')}</h2>
@@ -156,17 +142,17 @@ const EnglishDictionaryApp: React.FC = () => {
                 )}
 
                 {/* 彩蛋显示区域 */}
-                {isEasterEgg && (
+                {easterEggMessage && (
                     <div className="h-full flex flex-col items-center justify-center text-center">
                         <div className="bg-gradient-to-r from-pink-500/20 via-purple-500/20 to-blue-500/20 p-8 rounded-2xl backdrop-blur-md ring-1 ring-white/30 dark:ring-black/30 max-w-md w-full">
                             <div className="text-4xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-pink-500 via-purple-500 to-blue-500 animate-pulse">
-                                {t('dictionary_easter_egg')}
+                                {easterEggMessage}
                             </div>
                         </div>
                     </div>
                 )}
 
-                {result && !isEasterEgg && (
+                {result && !easterEggMessage && (
                     <div className="space-y-4">
                         <div className="text-center py-4">
                             <h1 className="text-5xl font-bold">{result.word}</h1>

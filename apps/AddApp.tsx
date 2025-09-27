@@ -1,139 +1,139 @@
-import React, { useState, useCallback, useEffect } from 'react';
+import React, { useState } from 'react';
 import { useLanguage } from '../contexts/LanguageContext';
+import type { AppDefinition } from '../types';
 
-interface Task {
-  id: number;
-  text: string;
-  completed: boolean;
-}
+const CUSTOM_APPS_STORAGE_KEY = 'cjc_custom_apps';
 
-const CheckboxIcon = ({ checked }: { checked: boolean }) => (
-    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" className={`w-5 h-5 transition-colors ${checked ? 'text-green-400' : 'text-gray-400'}`}>
-        {checked ? (
-            <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.857-9.809a.75.75 0 00-1.214-.882l-3.483 4.79-1.88-1.88a.75.75 0 10-1.06 1.061l2.5 2.5a.75.75 0 001.137-.089l4-5.5z" clipRule="evenodd" />
-        ) : (
-            <path fillRule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-2 0a6 6 0 11-12 0 6 6 0 0112 0z" clipRule="evenodd" />
-        )}
-    </svg>
-);
+const AddApp: React.FC = () => {
+    const { t } = useLanguage();
+    const [name, setName] = useState('');
+    const [url, setUrl] = useState('');
+    const [iconUrl, setIconUrl] = useState('');
+    const [error, setError] = useState<string | null>(null);
+    const [success, setSuccess] = useState<string | null>(null);
 
-const STORAGE_KEY = 'notes_app_tasks';
+    const handleSubmit = (e: React.FormEvent) => {
+        e.preventDefault();
+        setError(null);
+        setSuccess(null);
 
-const NotesApp: React.FC = () => {
-  const { t } = useLanguage();
-  const [tasks, setTasks] = useState<Task[]>(() => {
-    try {
-        const savedTasks = localStorage.getItem(STORAGE_KEY);
-        return savedTasks ? JSON.parse(savedTasks) : [];
-    } catch (e) {
-        console.error("Failed to load tasks:", e);
-        return [];
-    }
-  });
+        if (!name.trim() || !url.trim()) {
+            setError(t('add_app_error_required'));
+            return;
+        }
 
-  const [input, setInput] = useState('');
-
-  useEffect(() => {
-    try {
-        localStorage.setItem(STORAGE_KEY, JSON.stringify(tasks));
-        window.dispatchEvent(new CustomEvent('notes-updated'));
-    } catch (e) {
-        console.error("Failed to save tasks:", e);
-    }
-  }, [tasks]);
-
-  const handleAddTask = useCallback((e: React.FormEvent) => {
-    e.preventDefault();
-    if (!input.trim()) return;
-    const newTask: Task = {
-      id: Date.now(),
-      text: input.trim(),
-      completed: false,
-    };
-    setTasks(prevTasks => [newTask, ...prevTasks]);
-    setInput('');
-  }, [input]);
-
-  const handleToggleComplete = (id: number) => {
-    setTasks(prevTasks =>
-      prevTasks.map(task =>
-        task.id === id ? { ...task, completed: !task.completed } : task
-      )
-    );
-  };
-
-  const handleDeleteTask = (id: number) => {
-    setTasks(prevTasks => prevTasks.filter(task => task.id !== id));
-  };
-  
-  const handleDrop = (e: React.DragEvent) => {
-    e.preventDefault();
-    const dataString = e.dataTransfer.getData('application/cjc-os-item');
-    if (dataString) {
         try {
-            const data = JSON.parse(dataString);
-            if (data.type === 'text' && typeof data.content === 'string') {
-                setInput(prev => prev ? `${prev} ${data.content}` : data.content);
+            // Basic URL validation
+            if (!url.startsWith('http://') && !url.startsWith('https://')) {
+                throw new Error('Invalid URL');
             }
-        } catch (err) { console.error("Drop error:", err); }
-    }
-  };
+            new URL(url);
+        } catch (_) {
+            setError(t('add_app_error_invalid_url'));
+            return;
+        }
 
-  return (
-    <div className="h-full flex flex-col bg-transparent text-outline">
-      <header className="mb-4">
-        <h1 className="text-xl font-bold mb-2">{t('notes_title')}</h1>
-        <form onSubmit={handleAddTask} className="flex items-center">
-          <input
-            type="text"
-            value={input}
-            onChange={(e) => setInput(e.target.value)}
-            placeholder={t('notes_placeholder')}
-            className="flex-grow p-2 rounded-l-md bg-white/20 dark:bg-black/20 backdrop-blur-md text-outline placeholder-outline border-0 focus:outline-none focus:ring-2 focus:ring-gray-500 dark:focus:ring-gray-400 ring-1 ring-inset ring-white/50 dark:ring-white/20"
-            onDrop={handleDrop}
-            onDragOver={(e) => e.preventDefault()}
-          />
-          <button
-            type="submit"
-            className="px-4 py-2 bg-black/20 dark:bg-white/20 text-outline rounded-r-md ring-1 ring-inset ring-white/30 dark:ring-black/30 shadow-lg hover:bg-black/30 dark:hover:bg-white/30 active:shadow-inner active:scale-95 transition-all duration-150 disabled:bg-black/10 disabled:dark:bg-white/10 disabled:shadow-none disabled:cursor-not-allowed"
-            disabled={!input.trim()}
-          >
-            {t('notes_add')}
-          </button>
-        </form>
-      </header>
+        const newApp: AppDefinition = {
+            id: `custom-${Date.now()}`,
+            name: name.trim(), // Store the name directly, as we can't add to translations dynamically
+            url: url.trim(),
+            icon: iconUrl.trim() || undefined,
+            category: 'category_custom',
+        };
 
-      <main className="flex-grow overflow-y-auto pr-2 -mr-4 space-y-2">
-        {tasks.length === 0 ? (
-          <div className="text-center opacity-70 pt-8">
-            <p>{t('notes_empty_state_l1')}</p>
-            <p>{t('notes_empty_state_l2')}</p>
-          </div>
-        ) : (
-          tasks.map(task => (
-            <div
-              key={task.id}
-              className={`flex items-center p-2 rounded-lg transition-all duration-300 bg-black/5 dark:bg-white/5 ${task.completed ? 'opacity-50' : 'opacity-100'}`}
-            >
-              <button onClick={() => handleToggleComplete(task.id)} className="p-1" aria-label={task.completed ? t('notes_aria_mark_incomplete') : t('notes_aria_mark_complete')}>
-                <CheckboxIcon checked={task.completed} />
-              </button>
-              <span className={`flex-grow mx-2 ${task.completed ? 'line-through' : ''}`}>{task.text}</span>
-              <button
-                onClick={() => handleDeleteTask(task.id)}
-                className="p-1 rounded-full text-gray-400 hover:bg-red-500/50 hover:text-white transition-colors"
-                aria-label={t('notes_aria_delete')}
-              >
-                <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-                    <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
-                </svg>
-              </button>
+        try {
+            const savedAppsJSON = localStorage.getItem(CUSTOM_APPS_STORAGE_KEY);
+            const savedApps: AppDefinition[] = savedAppsJSON ? JSON.parse(savedAppsJSON) : [];
+            
+            savedApps.push(newApp);
+
+            localStorage.setItem(CUSTOM_APPS_STORAGE_KEY, JSON.stringify(savedApps));
+            
+            window.dispatchEvent(new CustomEvent('custom-apps-updated'));
+
+            setSuccess(t('add_app_success', { name: newApp.name }));
+            
+            setName('');
+            setUrl('');
+            setIconUrl('');
+
+            setTimeout(() => setSuccess(null), 3000);
+
+        } catch (err) {
+            console.error("Failed to save custom app:", err);
+            setError(t('add_app_error_generic'));
+        }
+    };
+
+    return (
+        <div className="h-full flex flex-col text-outline">
+            <h1 className="text-2xl font-bold mb-4">{t('app_add_app')}</h1>
+            <p className="text-sm opacity-70 mb-6">{t('add_app_description')}</p>
+            
+            <div className="flex gap-8">
+                <form onSubmit={handleSubmit} className="flex-grow space-y-4">
+                    <div>
+                        <label htmlFor="app-name" className="block text-sm font-medium mb-1">{t('add_app_name_label')}</label>
+                        <input
+                            id="app-name"
+                            type="text"
+                            value={name}
+                            onChange={(e) => setName(e.target.value)}
+                            placeholder={t('add_app_name_placeholder')}
+                            className="w-full p-2 rounded-md bg-white/20 dark:bg-black/20 backdrop-blur-md text-outline placeholder-outline border-0 focus:outline-none focus:ring-2 focus:ring-gray-500"
+                            required
+                        />
+                    </div>
+                    <div>
+                        <label htmlFor="app-url" className="block text-sm font-medium mb-1">{t('add_app_url_label')}</label>
+                        <input
+                            id="app-url"
+                            type="url"
+                            value={url}
+                            onChange={(e) => setUrl(e.target.value)}
+                            placeholder={t('add_app_url_placeholder')}
+                            className="w-full p-2 rounded-md bg-white/20 dark:bg-black/20 backdrop-blur-md text-outline placeholder-outline border-0 focus:outline-none focus:ring-2 focus:ring-gray-500"
+                            required
+                        />
+                    </div>
+                    <div>
+                        <label htmlFor="app-icon-url" className="block text-sm font-medium mb-1">{t('add_app_icon_label')}</label>
+                        <input
+                            id="app-icon-url"
+                            type="url"
+                            value={iconUrl}
+                            onChange={(e) => setIconUrl(e.target.value)}
+                            placeholder={t('add_app_icon_placeholder')}
+                            className="w-full p-2 rounded-md bg-white/20 dark:bg-black/20 backdrop-blur-md text-outline placeholder-outline border-0 focus:outline-none focus:ring-2 focus:ring-gray-500"
+                        />
+                    </div>
+                    <div className="pt-4">
+                        <button
+                            type="submit"
+                            className="w-full px-4 py-3 bg-blue-600 text-white font-semibold rounded-lg shadow-lg hover:bg-blue-500 active:shadow-inner active:scale-95 transition-all duration-150"
+                        >
+                            {t('add_app_button')}
+                        </button>
+                    </div>
+                    {error && <p className="text-sm text-red-400 mt-2">{error}</p>}
+                    {success && <p className="text-sm text-green-400 mt-2">{success}</p>}
+                </form>
+
+                <div className="flex-shrink-0 w-40 flex flex-col items-center">
+                    <p className="text-sm font-semibold mb-2">{t('add_app_preview')}</p>
+                    <div className="jelly-button flex-col w-28 h-24 p-1">
+                        {iconUrl ? (
+                            <img src={iconUrl} alt="Icon Preview" className="w-12 h-12 object-contain mb-1" onError={(e) => { e.currentTarget.style.display = 'none'; e.currentTarget.nextElementSibling?.nextElementSibling?.classList.remove('hidden') }} onLoad={(e) => { e.currentTarget.style.display = 'block'; e.currentTarget.nextElementSibling?.nextElementSibling?.classList.add('hidden') }} />
+                        ) : null}
+                         <div className={`w-12 h-12 mb-1 flex items-center justify-center bg-gray-500/20 rounded-lg ${iconUrl ? 'hidden' : ''}`}>?</div>
+                        <span className="text-sm text-outline text-center break-words w-full">
+                            {name || t('add_app_name_placeholder')}
+                        </span>
+                    </div>
+                </div>
             </div>
-          ))
-        )}
-      </main>
-    </div>
-  );
+        </div>
+    );
 };
 
-export default NotesApp;
+export default AddApp;

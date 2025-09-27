@@ -112,7 +112,7 @@ const StartMenu: React.FC<StartMenuProps> = ({ isOpen, apps, onAppClick, onResta
                         <button
                             key={app.id}
                             onClick={() => onAppClick(app.id)}
-                            className="relative flex flex-col items-center justify-center text-center p-1 rounded-lg bg-gradient-to-b from-white/5 to-white/0 ring-1 ring-inset ring-white/10 dark:ring-white/5 shadow-md hover:from-white/20 dark:hover:from-white/10 hover:shadow-lg active:shadow-inner active:scale-95 transition-all duration-200 group h-20"
+                            className="relative flex flex-col items-center justify-center text-center p-1 rounded-xl bg-gradient-to-b from-white/5 to-white/0 ring-1 ring-inset ring-white/10 dark:ring-white/5 shadow-md hover:from-white/20 dark:hover:from-white/10 hover:shadow-lg active:shadow-inner active:scale-95 transition-all duration-200 group h-20"
                             aria-label={appName}
                         >
                             {app.icon && <img src={app.icon} alt="" className="w-8 h-8 object-contain mb-1" />}
@@ -152,7 +152,7 @@ const StartMenu: React.FC<StartMenuProps> = ({ isOpen, apps, onAppClick, onResta
                                         <button
                                             key={app.id}
                                             onClick={() => onAppClick(app.id)}
-                                            className="relative flex items-center text-left p-2 rounded-md bg-white/[.02] dark:bg-black/5 ring-1 ring-inset ring-black/5 dark:ring-white/5 shadow-sm hover:bg-white/5 dark:hover:bg-white/10 hover:shadow-md active:shadow-inner active:scale-95 transition-all duration-200"
+                                            className="relative flex items-center text-left p-2 rounded-xl bg-white/[.02] dark:bg-black/5 ring-1 ring-inset ring-black/5 dark:ring-white/5 shadow-sm hover:bg-white/5 dark:hover:bg-white/10 hover:shadow-md active:shadow-inner active:scale-95 transition-all duration-200"
                                             aria-label={appName}
                                         >
                                             {app.icon ? (
@@ -180,7 +180,7 @@ const StartMenu: React.FC<StartMenuProps> = ({ isOpen, apps, onAppClick, onResta
         <div
             ref={menuRef}
             onAnimationEnd={handleAnimationEnd}
-            className={`absolute bottom-16 left-1/2 w-[560px] max-w-[95vw] h-[640px] max-h-[80vh] taskbar-background backdrop-blur-3xl ring-1 ring-black/10 dark:ring-white/10 rounded-xl shadow-2xl flex flex-col z-40 ${isOpen ? 'animate-fade-in-up' : 'animate-fade-out-down'}`}
+            className={`absolute bottom-16 left-1/2 w-[560px] max-w-[95vw] h-[640px] max-h-[80vh] taskbar-background backdrop-blur-3xl ring-1 ring-black/10 dark:ring-white/10 rounded-2xl shadow-2xl flex flex-col z-40 ${isOpen ? 'animate-fade-in-up' : 'animate-fade-out-down'}`}
         >
             <div className="p-4 flex-shrink-0">
                  <input
@@ -188,7 +188,7 @@ const StartMenu: React.FC<StartMenuProps> = ({ isOpen, apps, onAppClick, onResta
                     placeholder={t('start_menu_search_placeholder')}
                     value={searchQuery}
                     onChange={(e) => setSearchQuery(e.target.value)}
-                    className="w-full p-2 rounded-md bg-white/5 dark:bg-black/20 border border-black/10 dark:border-white/10 focus:outline-none focus:ring-2 focus:ring-gray-500 dark:focus:ring-gray-400 text-outline placeholder-outline"
+                    className="w-full p-2 rounded-xl bg-white/5 dark:bg-black/20 border border-black/10 dark:border-white/10 focus:outline-none focus:ring-2 focus:ring-gray-500 dark:focus:ring-gray-400 text-outline placeholder-outline"
                     autoFocus
                 />
             </div>
@@ -200,7 +200,7 @@ const StartMenu: React.FC<StartMenuProps> = ({ isOpen, apps, onAppClick, onResta
                     </h3>
                     <button
                         onClick={() => setShowAllApps(!showAllApps)}
-                        className="text-sm font-medium text-outline hover:underline px-2 py-1 rounded-md"
+                        className="text-sm font-medium text-outline hover:underline px-2 py-1 rounded-xl"
                     >
                         {showAllApps ? t('start_menu_back_to_pinned') : `${t('start_menu_all_apps')} >`}
                     </button>
@@ -209,8 +209,8 @@ const StartMenu: React.FC<StartMenuProps> = ({ isOpen, apps, onAppClick, onResta
                 {showAllApps ? renderAppList(categorizedApps) : renderAppGrid(pinnedApps)}
             </div>
 
-            <div className="mt-auto bg-white/[.02] dark:bg-black/5 rounded-b-xl px-6 py-3 flex justify-between items-center flex-shrink-0 text-outline">
-                 <button className="flex items-center space-x-2 p-2 rounded-lg bg-gradient-to-b from-white/5 to-white/0 dark:from-white/10 dark:to-white/0 ring-1 ring-inset ring-white/10 dark:ring-white/5 shadow-md hover:from-white/20 dark:hover:from-white/10 hover:shadow-lg active:shadow-inner active:scale-95 transition-all duration-200">
+            <div className="mt-auto bg-white/[.02] dark:bg-black/5 rounded-b-2xl px-6 py-3 flex justify-between items-center flex-shrink-0 text-outline">
+                 <button className="flex items-center space-x-2 p-2 rounded-xl bg-gradient-to-b from-white/5 to-white/0 dark:from-white/10 dark:to-white/0 ring-1 ring-inset ring-white/10 dark:ring-white/5 shadow-md hover:from-white/20 dark:hover:from-white/10 hover:shadow-lg active:shadow-inner active:scale-95 transition-all duration-200">
                     <div className="text-outline">
                         <UserIcon />
                     </div>

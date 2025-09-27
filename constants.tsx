@@ -1,9 +1,8 @@
-
 import React from 'react';
 import type { AppDefinition, AppCategory, WidgetDefinition, Language } from './types';
 import GeminiChatApp from './apps/GeminiChatApp';
 import ImageStudioApp from './apps/ImageStudioApp';
-import ClockApp from './apps/StopwatchApp';
+import ClockApp from './components/StopwatchApp';
 import DigitalHumanSelectorApp from './apps/DigitalHumanSelectorApp';
 import ChineseDictionaryApp from './apps/ChineseDictionaryApp';
 import EnglishDictionaryApp from './apps/EnglishDictionaryApp';
@@ -14,6 +13,7 @@ import TicTacToeApp from './apps/TicTacToeApp';
 import BlackboardApp from './apps/BlackboardApp';
 import ScheduleApp from './apps/ScheduleApp';
 import SlidesApp from './apps/SlidesApp';
+import AddApp from './apps/AddApp';
 import {
   ScheduleWidget,
   CalculatorWidget,
@@ -28,6 +28,7 @@ export const CATEGORY_ORDER: AppCategory[] = [
     'category_education',
     'category_google',
     'category_tools',
+    'category_custom',
 ];
 
 // For language selection dropdowns
@@ -126,6 +127,13 @@ export const APPS: AppDefinition[] = [
     component: AboutApp,
     category: 'category_tools',
     defaultSize: { width: 480, height: 520 },
+  },
+  {
+    id: 'add-app',
+    name: 'app_add_app',
+    component: AddApp,
+    category: 'category_tools',
+    defaultSize: { width: 600, height: 450 },
   },
   {
     id: 'gemma',

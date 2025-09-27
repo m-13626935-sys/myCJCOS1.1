@@ -8,14 +8,14 @@ const STORAGE_KEY = 'chinese_dictionary_last_state';
 interface DictionaryState {
     query: string;
     result: DictionaryEntry | null;
-    isEasterEgg: boolean;
+    easterEggMessage: string | null;
     error: string | null;
 }
 
 const initialState: DictionaryState = {
     query: '',
     result: null,
-    isEasterEgg: false,
+    easterEggMessage: null,
     error: null,
 };
 
@@ -32,18 +32,18 @@ const Section: React.FC<{ title: string; children: React.ReactNode }> = ({ title
     </div>
 );
 
-// 彩蛋名字列表（不区分大小写）
-const EASTER_EGG_NAMES = [
-    '郑家诚',
-    '严富城',
-    '凌珮淇',
-    '吴昊泽',
-    '嘉胜',
-    '浦宜璇',
-    '苏家杨',
-    '蔡卓昇',
-    '黄祖乐'
-];
+const EASTER_EGG_MESSAGES: Record<string, string> = {
+    '郑家诚': 'CJC 操作系统作者郑家诚生日快乐！',
+    '浦宜璇': '浦宜璇生日快乐！',
+    '黄祖乐': '黄祖乐生日快乐！',
+    '嘉胜': '嘉胜生日快乐！',
+    '蔡卓昇': '蔡卓昇生日快乐！',
+    '吴昊泽': '吴昊泽生日快乐！',
+    '凌珮淇': '凌珮淇生日快乐！',
+    '苏家扬': '苏家扬生日快乐！',
+    '严富城': '严富城生日快乐！'
+};
+
 
 const ChineseDictionaryApp: React.FC = () => {
     const { t } = useLanguage();
@@ -57,7 +57,7 @@ const ChineseDictionaryApp: React.FC = () => {
     });
     
     const [isLoading, setIsLoading] = useState(false);
-    const { query, result, isEasterEgg, error } = state;
+    const { query, result, easterEggMessage, error } = state;
 
     useEffect(() => {
         try {
@@ -72,35 +72,24 @@ const ChineseDictionaryApp: React.FC = () => {
         if (!query.trim() || isLoading) return;
 
         setIsLoading(true);
-        setState(s => ({ ...s, error: null, result: null, isEasterEgg: false }));
+        setState(s => ({ ...s, error: null, result: null, easterEggMessage: null }));
 
         try {
-            const normalizedQuery = query.trim().toLowerCase();
-            if (EASTER_EGG_NAMES.some(name => name.toLowerCase() === normalizedQuery)) {
-                setState(s => ({ ...s, isEasterEgg: true }));
+            const trimmedQuery = query.trim();
+            const message = EASTER_EGG_MESSAGES[trimmedQuery];
+
+            if (message) {
+                setState(s => ({ ...s, easterEggMessage: message }));
             } else {
-                const data = await geminiService.getDictionaryEntry(query.trim());
-                setState(s => ({ ...s, result: data, isEasterEgg: false }));
+                const data = await geminiService.getDictionaryEntry(trimmedQuery);
+                setState(s => ({ ...s, result: data, easterEggMessage: null }));
             }
         } catch (err) {
-            console.error('Chineseictionary error:', err);
+            console.error('Chinese Dictionary error:', err);
             const errorMessage = err instanceof Error ? t(err.message) : t('dictionary_error_unknown');
             setState(s => ({ ...s, error: errorMessage }));
         } finally {
             setIsLoading(false);
-        }
-    };
-    
-    const handleDrop = (e: React.DragEvent) => {
-        e.preventDefault();
-        const dataString = e.dataTransfer.getData('application/cjc-os-item');
-        if (dataString) {
-            try {
-                const data = JSON.parse(dataString);
-                if (data.type === 'text' && typeof data.content === 'string') {
-                    setState(s => ({ ...s, query: s.query ? `${s.query} ${data.content}` : data.content }));
-                }
-            } catch (err) { console.error("Drop error:", err); }
         }
     };
 
@@ -125,8 +114,6 @@ const ChineseDictionaryApp: React.FC = () => {
                         placeholder={t('dictionary_placeholder_chinese')}
                         className="flex-grow p-3 text-lg rounded-l-md bg-white/20 dark:bg-black/20 backdrop-blur-md text-outline placeholder-outline border-0 focus:outline-none focus:ring-2 focus:ring-gray-500 dark:focus:ring-gray-400 ring-1 ring-inset ring-white/50 dark:ring-white/20"
                         disabled={isLoading}
-                        onDrop={handleDrop}
-                        onDragOver={(e) => e.preventDefault()}
                     />
                     <button
                         type="submit"
@@ -146,7 +133,7 @@ const ChineseDictionaryApp: React.FC = () => {
             <main className="flex-grow overflow-y-auto pr-2 -mr-4 pb-2">
                 {error && <div className="text-center p-4 bg-red-500/20 text-outline rounded-lg">{error}</div>}
                 
-                {!isLoading && !result && !error && !isEasterEgg && (
+                {!isLoading && !result && !error && !easterEggMessage && (
                     <div className="h-full flex flex-col items-center justify-center text-center text-outline opacity-70">
                          <svg xmlns="http://www.w3.org/2000/svg" className="w-24 h-24 opacity-20" viewBox="0 0 24 24" fill="currentColor"><path d="M21.822 7.431A1 1 0 0 0 21 7H7.333L6.179 4.23A1.994 1.994 0 0 0 4.333 3H4a1 1 0 0 0-1 1v1h1.179l3 6.6A1.993 1.993 0 0 0 9 13h9a1 1 0 0 0 .931-.648l3-8a1 1 0 0 0-.109-.921zM9 14.5A1.5 1.5 0 1 1 7.5 16a1.5 1.5 0 0 1 1.5-1.5zm8.5 0a1.5 1.5 0 1 1-1.5 1.5a1.5 1.5 0 0 1 1.5-1.5zM12 1a1 1 0 0 0-1 1v10a1 1 0 0 0 2 0V2a1 1 0 0 0-1-1zm-5 4a1 1 0 0 0-1 1v5a1 1 0 0 0 2 0V6a1 1 0 0 0-1-1zm10 0a1 1 0 0 0-1 1v5a1 1 0 0 0 2 0V6a1 1 0 0 0-1-1z"/></svg>
                         <h2 className="text-xl font-semibold mt-4">{t('dictionary_initial_title_chinese')}</h2>
@@ -164,17 +151,17 @@ const ChineseDictionaryApp: React.FC = () => {
                 )}
 
                 {/* 彩蛋显示区域 */}
-                {isEasterEgg && (
+                {easterEggMessage && (
                     <div className="h-full flex flex-col items-center justify-center text-center">
                         <div className="bg-gradient-to-r from-pink-500/20 via-purple-500/20 to-blue-500/20 p-8 rounded-2xl backdrop-blur-md ring-1 ring-white/30 dark:ring-black/30 max-w-md w-full">
                             <div className="text-4xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-pink-500 via-purple-500 to-blue-500 animate-pulse">
-                                {t('dictionary_easter_egg')}
+                                {easterEggMessage}
                             </div>
                         </div>
                     </div>
                 )}
 
-                {result && !isEasterEgg && (
+                {result && !easterEggMessage && (
                     <div className="space-y-4">
                         <div className="text-center py-4">
                             <h1 className="text-5xl font-bold">{result.word}</h1>

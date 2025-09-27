@@ -119,15 +119,7 @@ const GeminiChatApp: React.FC<GeminiChatAppProps> = ({
         {history.map((msg, index) => (
           <div key={index} className={`flex ${msg.role === 'user' ? 'justify-end' : 'justify-start'}`}>
             <div 
-              className={`max-w-xl px-4 py-2 rounded-lg ${msg.role === 'user' ? 'bg-black/25 dark:bg-blue-800/50 backdrop-blur-lg ring-1 ring-inset ring-white/30' : 'bg-white/20 dark:bg-black/10 backdrop-blur-lg ring-1 ring-black/5 dark:ring-white/10'} ${!!msg.text ? 'cursor-grab' : ''}`}
-              draggable={!!msg.text}
-              onDragStart={(e) => {
-                  if (!msg.text) return;
-                  const data = { type: 'text', content: msg.text };
-                  e.dataTransfer.setData('application/cjc-os-item', JSON.stringify(data));
-                  e.dataTransfer.effectAllowed = 'copy';
-                  e.stopPropagation(); 
-              }}
+              className={`max-w-xl px-4 py-2 rounded-xl ${msg.role === 'user' ? 'bg-black/25 dark:bg-blue-800/50 backdrop-blur-lg ring-1 ring-inset ring-white/30' : 'bg-white/20 dark:bg-black/10 backdrop-blur-lg ring-1 ring-black/5 dark:ring-white/10'}`}
             >
               <div className="prose prose-sm max-w-none whitespace-pre-wrap text-outline">{msg.text}</div>
             </div>
@@ -135,7 +127,7 @@ const GeminiChatApp: React.FC<GeminiChatAppProps> = ({
         ))}
         {isLoading && history[history.length-1]?.role === 'model' && (
             <div className="flex justify-start">
-                 <div className="max-w-xl px-4 py-2 rounded-lg bg-white/20 dark:bg-black/10 backdrop-blur-lg ring-1 ring-black/5 dark:ring-white/10">
+                 <div className="max-w-xl px-4 py-2 rounded-xl bg-white/20 dark:bg-black/10 backdrop-blur-lg ring-1 ring-black/5 dark:ring-white/10">
                     <div className="flex items-center space-x-2">
                         <div className="w-2 h-2 bg-gray-500 rounded-full animate-pulse"></div>
                         <div className="w-2 h-2 bg-gray-500 rounded-full animate-pulse" style={{animationDelay: '0.2s'}}></div>
@@ -152,13 +144,13 @@ const GeminiChatApp: React.FC<GeminiChatAppProps> = ({
           value={input}
           onChange={(e) => setInput(e.target.value)}
           placeholder={placeholder}
-          className="flex-grow p-2 rounded-l-md bg-white/20 dark:bg-black/20 backdrop-blur-md text-outline placeholder-outline border-0 focus:outline-none focus:ring-2 focus:ring-gray-500 dark:focus:ring-gray-400 ring-1 ring-inset ring-white/50 dark:ring-white/20"
+          className="flex-grow p-2 rounded-l-xl bg-white/20 dark:bg-black/20 backdrop-blur-md text-outline placeholder-outline border-0 focus:outline-none focus:ring-2 focus:ring-gray-500 dark:focus:ring-gray-400 ring-1 ring-inset ring-white/50 dark:ring-white/20"
           disabled={isLoading}
         />
         <button
           type="submit"
           disabled={isLoading || !input.trim()}
-          className="p-2 rounded-r-md bg-black/20 dark:bg-white/20 text-outline ring-1 ring-inset ring-white/30 dark:ring-black/30 shadow-lg hover:bg-black/30 dark:hover:bg-white/30 active:shadow-inner active:scale-95 transition-all duration-150 disabled:bg-black/10 disabled:dark:bg-white/10 disabled:shadow-none disabled:cursor-not-allowed"
+          className="p-2 rounded-r-xl bg-black/20 dark:bg-white/20 text-outline ring-1 ring-inset ring-white/30 dark:ring-black/30 shadow-lg hover:bg-black/30 dark:hover:bg-white/30 active:shadow-inner active:scale-95 transition-all duration-150 disabled:bg-black/10 disabled:dark:bg-white/10 disabled:shadow-none disabled:cursor-not-allowed"
         >
           <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6 transform -rotate-90" fill="none" viewBox="0 0 24 24" stroke="currentColor">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8" />

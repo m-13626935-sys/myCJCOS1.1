@@ -64,10 +64,6 @@ const Window: React.FC<WindowProps> = ({
     }
   }, [isClosing, onCloseAnimationComplete]);
 
-  if (isMinimized) {
-    return null;
-  }
-
   const windowClasses = [
     'absolute', 'flex', 'flex-col',
     'window-background',
@@ -75,7 +71,8 @@ const Window: React.FC<WindowProps> = ({
     !isClosing && 'transition-[top,left,width,height]', // Disable transition during exit anim
     'duration-200', 'ease-in-out',
     isMaximized ? 'rounded-none' : 'rounded-2xl',
-    isClosing ? 'animate-window-exit' : 'animate-window-enter'
+    isClosing ? 'animate-window-exit' : 'animate-window-enter',
+    isMinimized ? 'hidden' : ''
   ].join(' ');
 
   const windowStyles: React.CSSProperties = {

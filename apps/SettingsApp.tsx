@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import type { AppProps } from '../types';
 import { useLanguage } from '../contexts/LanguageContext';
@@ -12,7 +11,7 @@ const SettingsApp: React.FC<Partial<AppProps>> = (props) => {
     const { t } = useLanguage();
     const [activeCategory, setActiveCategory] = useState<SettingsCategory>('appearance');
 
-    const categories: { id: SettingsCategory; name: string; icon: JSX.Element }[] = [
+    const categories: { id: SettingsCategory; name: string; icon: React.ReactElement }[] = [
         {
             id: 'appearance',
             name: t('settings_appearance_category'),

@@ -1,6 +1,6 @@
 import React, { useState, useCallback, useRef, useEffect } from 'react';
 import { useLanguage } from '../contexts/LanguageContext';
-import { v4 as uuidvv4 } from 'uuid';
+import { v4 as uuidv4 } from 'uuid';
 import type { Presentation, Slide, PresentationElement, AppProps } from '../types';
 import { geminiService } from '../services/geminiService';
 import { LANGUAGES } from '../constants';
@@ -17,11 +17,11 @@ const ICONS = {
 };
 
 const defaultSlide: Slide = {
-    id: uuidvv4(),
+    id: uuidv4(),
     backgroundColor: '#FFFFFF',
     elements: [
-        { id: uuidvv4(), type: 'text', x: 50, y: 50, width: 800, height: 100, content: 'Title', style: { fontSize: 60, fontWeight: 700, color: '#000000' } },
-        { id: uuidvv4(), type: 'text', x: 50, y: 160, width: 800, height: 50, content: 'Subtitle', style: { fontSize: 30, fontWeight: 400, color: '#4A5568' } },
+        { id: uuidv4(), type: 'text', x: 50, y: 50, width: 800, height: 100, content: 'Title', style: { fontSize: 60, fontWeight: 700, color: '#000000' } },
+        { id: uuidv4(), type: 'text', x: 50, y: 160, width: 800, height: 50, content: 'Subtitle', style: { fontSize: 30, fontWeight: 400, color: '#4A5568' } },
     ]
 };
 
@@ -111,7 +111,7 @@ const SlidesApp: React.FC<Partial<AppProps>> = ({ close }) => {
 
     const addSlide = () => {
         const newSlide: Slide = {
-            id: uuidvv4(),
+            id: uuidv4(),
             backgroundColor: '#FFFFFF',
             elements: [],
         };
@@ -123,7 +123,7 @@ const SlidesApp: React.FC<Partial<AppProps>> = ({ close }) => {
     const deleteSlide = (indexToDelete: number) => {
         const newSlides = presentation.slides.filter((_, index) => index !== indexToDelete);
         if (newSlides.length === 0) {
-            const newSlide: Slide = { id: uuidvv4(), backgroundColor: '#FFFFFF', elements: [] };
+            const newSlide: Slide = { id: uuidv4(), backgroundColor: '#FFFFFF', elements: [] };
             updatePresentation({ ...presentation, slides: [newSlide] });
             setCurrentSlideIndex(0);
         } else {
@@ -136,7 +136,7 @@ const SlidesApp: React.FC<Partial<AppProps>> = ({ close }) => {
 
     const addElement = (type: 'text' | 'image', src?: string) => {
         const newElement: PresentationElement = {
-            id: uuidvv4(),
+            id: uuidv4(),
             type,
             x: 100,
             y: 100,
@@ -194,8 +194,8 @@ const SlidesApp: React.FC<Partial<AppProps>> = ({ close }) => {
             const generatedSlidesData = await geminiService.generatePresentationSlides(prompt);
             const newSlides: Slide[] = generatedSlidesData.map(slideData => ({
                 ...slideData,
-                id: uuidvv4(),
-                elements: slideData.elements.map(el => ({ ...el, id: uuidvv4() }))
+                id: uuidv4(),
+                elements: slideData.elements.map(el => ({ ...el, id: uuidv4() }))
             }));
             if (newSlides.length > 0) {
                  updatePresentation({ ...presentation, slides: newSlides });

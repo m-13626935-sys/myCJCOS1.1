@@ -13,7 +13,7 @@ const SectionHeader: React.FC<{ title: string, previewStyle?: React.CSSPropertie
 );
 
 const Section: React.FC<{ title: string; children: React.ReactNode, disabled?: boolean, previewStyle?: React.CSSProperties }> = ({ title, children, disabled = false, previewStyle }) => (
-    <div className={`bg-white/5 dark:bg-black/10 backdrop-blur-md p-4 rounded-xl mb-4 ring-1 ring-black/10 dark:ring-white/10 shadow-lg transition-opacity ${disabled ? 'opacity-50 pointer-events-none' : ''}`}>
+    <div className={`bg-white/5 dark:bg-black/10 backdrop-blur-md p-4 rounded-2xl mb-4 ring-1 ring-black/10 dark:ring-white/10 shadow-lg transition-opacity ${disabled ? 'opacity-50 pointer-events-none' : ''}`}>
         <SectionHeader title={title} previewStyle={previewStyle} />
         {children}
     </div>
@@ -25,7 +25,7 @@ const GradientPicker: React.FC<{
     idPrefix: string;
 }> = ({ gradient, onGradientChange, idPrefix }) => {
     return (
-        <div className="space-y-3 p-3 bg-black/5 dark:bg-white/5 rounded-lg">
+        <div className="space-y-3 p-3 bg-black/5 dark:bg-white/5 rounded-xl">
             <div className="flex items-center gap-4">
                 <div className="flex-1">
                     <label htmlFor={`${idPrefix}-from-color`} className="block text-sm mb-1 opacity-80">From</label>
@@ -34,7 +34,7 @@ const GradientPicker: React.FC<{
                         type="color"
                         value={gradient.from}
                         onChange={(e) => onGradientChange({ ...gradient, from: e.target.value })}
-                        className="w-full h-10 p-1 bg-transparent rounded-md cursor-pointer border-2 border-white/20"
+                        className="w-full h-10 p-1 bg-transparent rounded-xl cursor-pointer border-2 border-white/20"
                     />
                 </div>
                 <div className="flex-1">
@@ -44,7 +44,7 @@ const GradientPicker: React.FC<{
                         type="color"
                         value={gradient.to}
                         onChange={(e) => onGradientChange({ ...gradient, to: e.target.value })}
-                        className="w-full h-10 p-1 bg-transparent rounded-md cursor-pointer border-2 border-white/20"
+                        className="w-full h-10 p-1 bg-transparent rounded-xl cursor-pointer border-2 border-white/20"
                     />
                 </div>
             </div>
@@ -136,7 +136,7 @@ const SystemAppearanceSettings: React.FC<Partial<AppProps>> = ({
                          <button
                             key={opt.id}
                             onClick={() => setColorMode?.(opt.id)}
-                            className={`flex-1 py-2 px-4 text-center rounded-md transition-all border ${colorMode === opt.id ? 'bg-blue-500/80 border-transparent text-white' : 'bg-black/5 dark:bg-white/5 border-white/30 hover:bg-black/10 dark:hover:bg-white/10'}`}
+                            className={`flex-1 py-2 px-4 text-center rounded-xl transition-all border ${colorMode === opt.id ? 'bg-blue-500/80 border-transparent text-white' : 'bg-black/5 dark:bg-white/5 border-white/30 hover:bg-black/10 dark:hover:bg-white/10'}`}
                         >
                             {opt.name}
                         </button>
@@ -154,9 +154,9 @@ const SystemAppearanceSettings: React.FC<Partial<AppProps>> = ({
                         value={wallpaperUrl}
                         onChange={(e) => setWallpaperUrl(e.target.value)}
                         placeholder={t('appearance_paste_url')}
-                        className="flex-grow p-2 rounded-l-md bg-white/20 dark:bg-black/20 backdrop-blur-md text-outline placeholder-outline border-0 focus:outline-none focus:ring-2 focus:ring-gray-500 dark:focus:ring-gray-400 ring-1 ring-inset ring-white/50 dark:ring-white/20"
+                        className="flex-grow p-2 rounded-l-xl bg-white/20 dark:bg-black/20 backdrop-blur-md text-outline placeholder-outline border-0 focus:outline-none focus:ring-2 focus:ring-gray-500 dark:focus:ring-gray-400 ring-1 ring-inset ring-white/50 dark:ring-white/20"
                     />
-                    <button type="submit" className="px-4 py-2 bg-black/20 dark:bg-white/20 text-outline rounded-r-md ring-1 ring-inset ring-white/30 dark:ring-black/30 shadow-lg hover:bg-black/30 dark:hover:bg-white/30 active:shadow-inner active:scale-95 transition-all duration-150">
+                    <button type="submit" className="px-4 py-2 bg-black/20 dark:bg-white/20 text-outline rounded-r-xl ring-1 ring-inset ring-white/30 dark:ring-black/30 shadow-lg hover:bg-black/30 dark:hover:bg-white/30 active:shadow-inner active:scale-95 transition-all duration-150">
                         {t('appearance_apply')}
                     </button>
                 </form>
@@ -170,7 +170,7 @@ const SystemAppearanceSettings: React.FC<Partial<AppProps>> = ({
                 />
                 <button
                     onClick={() => fileInputRef.current?.click()}
-                    className="w-full py-2 bg-black/20 dark:bg-white/20 text-outline rounded-md ring-1 ring-inset ring-white/30 dark:ring-black/30 shadow-lg hover:bg-black/30 dark:hover:bg-white/30 active:shadow-inner active:scale-95 transition-all duration-150"
+                    className="w-full py-2 bg-black/20 dark:bg-white/20 text-outline rounded-xl ring-1 ring-inset ring-white/30 dark:ring-black/30 shadow-lg hover:bg-black/30 dark:hover:bg-white/30 active:shadow-inner active:scale-95 transition-all duration-150"
                 >
                     {t('appearance_upload_local')}
                 </button>
@@ -187,7 +187,7 @@ const SystemAppearanceSettings: React.FC<Partial<AppProps>> = ({
                             type="color"
                             value={textColor}
                             onChange={(e) => setTextColor?.(e.target.value)}
-                            className="w-full h-10 p-1 bg-transparent rounded-md cursor-pointer border-2 border-white/20"
+                            className="w-full h-10 p-1 bg-transparent rounded-xl cursor-pointer border-2 border-white/20"
                             aria-label={t('appearance_select_main_color_aria')}
                         />
                     </div>
@@ -200,7 +200,7 @@ const SystemAppearanceSettings: React.FC<Partial<AppProps>> = ({
                             type="color"
                             value={textShadow}
                             onChange={(e) => setTextShadow?.(e.target.value)}
-                            className="w-full h-10 p-1 bg-transparent rounded-md cursor-pointer border-2 border-white/20"
+                            className="w-full h-10 p-1 bg-transparent rounded-xl cursor-pointer border-2 border-white/20"
                             aria-label={t('appearance_enter_shadow_color_aria')}
                         />
                     </div>
@@ -213,7 +213,7 @@ const SystemAppearanceSettings: React.FC<Partial<AppProps>> = ({
                         <button
                             key={opt.code}
                             onClick={() => setLanguage?.(opt.code)}
-                            className={`w-full py-2 text-left px-4 rounded-md transition-all border ${language === opt.code ? 'bg-blue-500/80 border-transparent text-white' : 'bg-black/5 dark:bg-white/5 border-white/30 hover:bg-black/10 dark:hover:bg-white/10'}`}
+                            className={`w-full py-2 text-left px-4 rounded-xl transition-all border ${language === opt.code ? 'bg-blue-500/80 border-transparent text-white' : 'bg-black/5 dark:bg-white/5 border-white/30 hover:bg-black/10 dark:hover:bg-white/10'}`}
                         >
                             {opt.name}
                         </button>
@@ -225,13 +225,13 @@ const SystemAppearanceSettings: React.FC<Partial<AppProps>> = ({
                 <div className="flex space-x-2">
                     <button
                         onClick={() => setTimeFormat?.('12h')}
-                        className={`flex-1 py-2 rounded-md transition-all border ${timeFormat === '12h' ? 'bg-blue-500/80 border-transparent text-white' : 'bg-black/5 dark:bg-white/5 border-white/30 hover:bg-black/10 dark:hover:bg-white/10'}`}
+                        className={`flex-1 py-2 rounded-xl transition-all border ${timeFormat === '12h' ? 'bg-blue-500/80 border-transparent text-white' : 'bg-black/5 dark:bg-white/5 border-white/30 hover:bg-black/10 dark:hover:bg-white/10'}`}
                     >
                         {t('time_format_12h')}
                     </button>
                     <button
                         onClick={() => setTimeFormat?.('24h')}
-                        className={`flex-1 py-2 rounded-md transition-all border ${timeFormat === '24h' ? 'bg-blue-500/80 border-transparent text-white' : 'bg-black/5 dark:bg-white/5 border-white/30 hover:bg-black/10 dark:hover:bg-white/10'}`}
+                        className={`flex-1 py-2 rounded-xl transition-all border ${timeFormat === '24h' ? 'bg-blue-500/80 border-transparent text-white' : 'bg-black/5 dark:bg-white/5 border-white/30 hover:bg-black/10 dark:hover:bg-white/10'}`}
                     >
                         {t('time_format_24h')}
                     </button>

@@ -78,7 +78,7 @@ const TicTacToeApp: React.FC = () => {
       </div>
       <button
         onClick={resetGame}
-        className="mt-6 px-6 py-3 bg-black/20 dark:bg-white/20 text-outline rounded-lg ring-1 ring-inset ring-white/30 dark:ring-black/30 shadow-lg hover:bg-black/30 dark:hover:bg-white/30 active:shadow-inner active:scale-95 transition-all duration-150"
+        className="mt-6 px-6 py-3 bg-black/20 dark:bg-white/20 text-outline rounded-xl ring-1 ring-inset ring-white/30 dark:ring-black/30 shadow-lg hover:bg-black/30 dark:hover:bg-white/30 active:shadow-inner active:scale-95 transition-all duration-150"
       >
         {t('ttt_reset_game')}
       </button>

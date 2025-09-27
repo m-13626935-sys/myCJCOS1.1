@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect, useCallback, useMemo } from 'react';
 import { APPS, WIDGETS } from './constants';
 import { useWindows } from './hooks/useWindows';
@@ -12,12 +11,14 @@ import Desktop from './components/Desktop';
 import SetupScreen from './components/SetupScreen';
 import WidgetPanel from './components/WidgetPanel';
 import DesktopWidgetWrapper from './components/DesktopWidgetWrapper';
+import MinimizedTaskbar from './components/MinimizedTaskbar';
 import type { AppProps, AppDefinition, Language, DesktopWidgetInstance, TimeFormat, ColorMode, GradientConfig, ButtonBackground, AISettings } from './types';
 import { useLanguage } from './contexts/LanguageContext';
 
 const WIDGET_STORAGE_KEY = 'cjc5_desktop_widgets';
 const TIME_FORMAT_STORAGE_KEY = 'cjc5_time_format';
 const AI_SETTINGS_STORAGE_KEY = 'cjc5_ai_settings';
+const CUSTOM_APPS_STORAGE_KEY = 'cjc_custom_apps';
 
 const App: React.FC = () => {
   const { t, setLanguage, language } = useLanguage();
@@ -37,6 +38,7 @@ const App: React.FC = () => {
   const [timeFormat, setTimeFormat] = useState<TimeFormat>('12h');
   const [colorMode, setColorMode] = useState<ColorMode>('light');
   const [systemBackgroundGradient, setSystemBackgroundGradient] = useState<GradientConfig>({ from: '#1a237e', to: '#004d40', angle: 145 });
+  const [customApps, setCustomApps] = useState<AppDefinition[]>([]);
   const [aiSettings, setAiSettings] = useState<AISettings>(() => {
     try {
         const saved = localStorage.getItem(AI_SETTINGS_STORAGE_KEY);
@@ -47,12 +49,40 @@ const App: React.FC = () => {
     }
   });
 
+  useEffect(() => {
+    const loadCustomApps = () => {
+        try {
+            const savedAppsJSON = localStorage.getItem(CUSTOM_APPS_STORAGE_KEY);
+            const savedApps: AppDefinition[] = savedAppsJSON ? JSON.parse(savedAppsJSON) : [];
+            if (Array.isArray(savedApps)) {
+                // For custom apps, we can't use the translation system for names.
+                // Their names are stored directly. We need to adapt how they are displayed.
+                // This is handled in components like DesktopIcon where they check if a translation exists.
+                setCustomApps(savedApps);
+            }
+        } catch (e) {
+            console.error("Failed to load custom apps:", e);
+        }
+    };
+    
+    loadCustomApps();
+
+    window.addEventListener('custom-apps-updated', loadCustomApps);
+    return () => {
+        window.removeEventListener('custom-apps-updated', loadCustomApps);
+    };
+  }, []);
+
   const visibleApps = useMemo(() => {
+    // For custom apps, the name is not a translation key. Components that render names
+    // (like DesktopIcon, StartMenu) need to handle this by attempting translation first
+    // and falling back to the name property if no translation is found. `t(app.name)` does this.
+    const allApps = [...APPS, ...customApps];
     if (aiSettings.isEnabled) {
-        return APPS;
+        return allApps;
     }
-    return APPS.filter(app => !app.isAiFeature);
-  }, [aiSettings.isEnabled]);
+    return allApps.filter(app => !app.isAiFeature);
+  }, [aiSettings.isEnabled, customApps]);
   
   const { windows, openWindow, closeWindow, focusWindow, minimizeWindow, restoreAndFocusWindow, updateWindowState, closeAllWindows, toggleMaximizeWindow, removeWindow } = useWindows(visibleApps, t);
 
@@ -260,8 +290,7 @@ const App: React.FC = () => {
           return prev.map(w => w.instanceId === instanceId ? { ...w, zIndex: maxZ + 1 } : w);
       });
   }, []);
-
-
+  
   if (isBooting) {
     return <StartupAnimation onFinished={() => { setIsBooting(false); setIsShutdown(false); }} />;
   }
@@ -281,6 +310,7 @@ const App: React.FC = () => {
   return (
     <div className="h-screen w-screen overflow-hidden">
       <WidgetPanel isOpen={isWidgetPanelOpen} onClose={() => setIsWidgetPanelOpen(false)} timeFormat={timeFormat} />
+      <MinimizedTaskbar apps={visibleApps} windows={windows} onRestore={restoreAndFocusWindow} />
       {isStartMenuMounted && <StartMenu isOpen={isStartMenuOpen} apps={visibleApps} onAppClick={handleAppClick} onRestart={handleRestart} onShutdown={handleShutdown} onClose={() => setIsStartMenuOpen(false)} onExited={handleStartMenuExited} windows={windows} userName={userName} />}
       <main className="h-full w-full relative">
         <Desktop apps={visibleApps} onAppDoubleClick={launchApp} onWidgetDrop={handleWidgetDrop} timeFormat={timeFormat} />
@@ -308,6 +338,7 @@ const App: React.FC = () => {
 
         {windows.map((win) => {
           const AppDefinition = visibleApps.find(app => app.id === win.appId);
+          // For custom apps, their name isn't a translation key. `t` will return the name itself.
           const AppContent = AppDefinition?.component || (() => null);
           
           const appProps: Partial<AppProps> = {
@@ -360,7 +391,16 @@ const App: React.FC = () => {
           );
         })}
       </main>
-      <Dock apps={visibleApps} onAppClick={launchApp} onStartClick={() => setIsStartMenuOpen(prev => !prev)} onWidgetsClick={() => setIsWidgetPanelOpen(prev => !prev)} windows={windows} timeFormat={timeFormat} isAiEnabled={aiSettings.isEnabled} aiSettings={aiSettings} />
+      <Dock 
+        apps={visibleApps} 
+        onAppClick={launchApp} 
+        onStartClick={() => setIsStartMenuOpen(prev => !prev)} 
+        onWidgetsClick={() => setIsWidgetPanelOpen(prev => !prev)} 
+        windows={windows} 
+        timeFormat={timeFormat} 
+        isAiEnabled={aiSettings.isEnabled} 
+        aiSettings={aiSettings} 
+      />
     </div>
   );
 }

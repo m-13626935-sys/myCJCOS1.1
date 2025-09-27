@@ -1,4 +1,3 @@
-
 import type { Language } from '../types';
 
 export const translations: Record<Language, Record<string, string>> = {
@@ -34,7 +33,7 @@ export const translations: Record<Language, Record<string, string>> = {
     'app_gmail': 'Gmail',
     'app_google_meet': '谷歌会议',
     'app_chinese_dictionary': '汉语词典',
-    'app_english_dictionary': '英汉词典',
+    'app_english_dictionary': '英文词典',
     'app_google_classroom': '谷歌课堂',
     'app_blooket': 'Blooket',
     'app_ains': 'AINS',
@@ -45,6 +44,8 @@ export const translations: Record<Language, Record<string, string>> = {
     'app_douyin': '抖音',
     'app_minecraft': '我的世界',
     'app_spotify': 'Spotify',
+    'app_assistant': '谷歌助理',
+    'app_add_app': '添加应用',
 
     // Widget Names
     'widget_schedule_name': '日程小组件',
@@ -57,6 +58,7 @@ export const translations: Record<Language, Record<string, string>> = {
     'category_education': '教育',
     'category_google': '谷歌',
     'category_tools': '工具',
+    'category_custom': '自定义应用',
 
     // General
     'document_title': '{{name}}的桌面',
@@ -191,8 +193,7 @@ export const translations: Record<Language, Record<string, string>> = {
 
     // English Dictionary App
     'dictionary_placeholder_english': '输入一个英文单词...',
-    'dictionary_initial_title_english': '英汉词典',
-    'dictionary_initial_subtitle_english': '输入单词以查看定义和用法',
+    'dictionary_initial_title_english': '英文词典',
     'dictionary_section_word_forms': '单词形态',
     'dictionary_section_synonyms': '同义词',
     'dictionary_section_antonyms': '反义词',
@@ -208,17 +209,7 @@ export const translations: Record<Language, Record<string, string>> = {
     'calculator_add': '加',
     'calculator_decimal': '小数点',
     'calculator_equals': '等于',
-
-    // Notes App
-    'notes_title': '备忘录',
-    'notes_placeholder': '添加一个新任务...',
-    'notes_add': '添加',
-    'notes_empty_state_l1': '这里空空如也',
-    'notes_empty_state_l2': '添加一个任务开始吧！',
-    'notes_aria_mark_incomplete': '标记为未完成',
-    'notes_aria_mark_complete': '标记为已完成',
-    'notes_aria_delete': '删除任务',
-
+    
     // Tic-Tac-Toe App
     'ttt_winner': '获胜者: {{player}}',
     'ttt_draw': '平局！',
@@ -315,17 +306,6 @@ export const translations: Record<Language, Record<string, string>> = {
     'assistant_mic_prompt': '点击麦克风说话',
     'assistant_confirmation_generic': '好的，已完成。',
     
-    // Camera App
-    'camera_error_access': '无法访问摄像头。请检查权限。',
-    'camera_capture_alt': '已拍摄的照片',
-    'camera_retake_photo': '重拍',
-    'camera_download_photo': '下载',
-    'camera_take_photo': '拍照',
-
-    // Information Bus Station
-    'information_station_title': '信息中转站',
-    'information_station_empty_prompt': '从应用中拖拽文本到这里存放。',
-    
     // Slides App
     'slides_create_with_ai': 'AI 生成',
     'slides_add_slide': '新幻灯片',
@@ -366,6 +346,21 @@ export const translations: Record<Language, Record<string, string>> = {
     'slides_ai_summarizing': '正在总结...',
     'slides_ai_summary_button': '生成摘要',
     'slides_ai_summary_result': '摘要结果',
+
+    // Add App
+    'add_app_description': '将网站作为应用添加到您的桌面。',
+    'add_app_name_label': '应用名称',
+    'add_app_name_placeholder': '我的应用',
+    'add_app_url_label': '应用网址',
+    'add_app_url_placeholder': 'https://example.com',
+    'add_app_icon_label': '图标网址 (可选)',
+    'add_app_icon_placeholder': 'https://example.com/icon.png',
+    'add_app_button': '添加应用',
+    'add_app_preview': '预览',
+    'add_app_error_required': '请填写应用名称和网址。',
+    'add_app_error_invalid_url': '请输入有效的网址。',
+    'add_app_error_generic': '保存应用时出错。',
+    'add_app_success': '已成功添加“{{name}}”！',
 
   },
   en: {
@@ -411,6 +406,8 @@ export const translations: Record<Language, Record<string, string>> = {
     'app_douyin': 'Douyin',
     'app_minecraft': 'Minecraft',
     'app_spotify': 'Spotify',
+    'app_assistant': 'Google Assistant',
+    'app_add_app': 'Add App',
 
     // Widget Names
     'widget_schedule_name': 'Schedule Widget',
@@ -423,6 +420,7 @@ export const translations: Record<Language, Record<string, string>> = {
     'category_education': 'Education',
     'category_google': 'Google',
     'category_tools': 'Tools',
+    'category_custom': 'Custom Apps',
 
     // General
     'document_title': "{{name}}'s Desktop",
@@ -558,7 +556,6 @@ export const translations: Record<Language, Record<string, string>> = {
     // English Dictionary App
     'dictionary_placeholder_english': 'Enter an English word...',
     'dictionary_initial_title_english': 'English Dictionary',
-    'dictionary_initial_subtitle_english': 'Enter a word to see its definition and usage',
     'dictionary_section_word_forms': 'Word Forms',
     'dictionary_section_synonyms': 'Synonyms',
     'dictionary_section_antonyms': 'Antonyms',
@@ -574,17 +571,7 @@ export const translations: Record<Language, Record<string, string>> = {
     'calculator_add': 'Add',
     'calculator_decimal': 'Decimal',
     'calculator_equals': 'Equals',
-
-    // Notes App
-    'notes_title': 'Notes',
-    'notes_placeholder': 'Add a new task...',
-    'notes_add': 'Add',
-    'notes_empty_state_l1': 'It\'s empty here',
-    'notes_empty_state_l2': 'Add a task to get started!',
-    'notes_aria_mark_incomplete': 'Mark as incomplete',
-    'notes_aria_mark_complete': 'Mark as complete',
-    'notes_aria_delete': 'Delete task',
-
+    
     // Tic-Tac-Toe App
     'ttt_winner': 'Winner: {{player}}',
     'ttt_draw': 'It\'s a draw!',
@@ -680,17 +667,6 @@ export const translations: Record<Language, Record<string, string>> = {
     'assistant_thinking': 'Thinking...',
     'assistant_mic_prompt': 'Tap the mic to talk',
     'assistant_confirmation_generic': 'OK, done.',
-
-    // Camera App
-    'camera_error_access': 'Could not access the camera. Please check permissions.',
-    'camera_capture_alt': 'Captured photo',
-    'camera_retake_photo': 'Retake',
-    'camera_download_photo': 'Download',
-    'camera_take_photo': 'Take Photo',
-
-    // Information Bus Station
-    'information_station_title': 'Info Station',
-    'information_station_empty_prompt': 'Drag and drop text from apps here to store it.',
     
     // Slides App
     'slides_create_with_ai': 'Create with AI',
@@ -732,6 +708,22 @@ export const translations: Record<Language, Record<string, string>> = {
     'slides_ai_summarizing': 'Summarizing...',
     'slides_ai_summary_button': 'Generate Summary',
     'slides_ai_summary_result': 'Summary Result',
+
+    // Add App
+    'add_app_description': 'Add any website to your desktop as an app.',
+    'add_app_name_label': 'App Name',
+    'add_app_name_placeholder': 'My App',
+    'add_app_url_label': 'App URL',
+    'add_app_url_placeholder': 'https://example.com',
+    'add_app_icon_label': 'Icon URL (Optional)',
+    'add_app_icon_placeholder': 'https://example.com/icon.png',
+    'add_app_button': 'Add App',
+    'add_app_preview': 'Preview',
+    'add_app_error_required': 'Please fill in the app name and URL.',
+    'add_app_error_invalid_url': 'Please enter a valid URL.',
+    'add_app_error_generic': 'An error occurred while saving the app.',
+    'add_app_success': 'Successfully added "{{name}}"!',
+
   },
   ms: {
     // Locales
@@ -776,6 +768,8 @@ export const translations: Record<Language, Record<string, string>> = {
     'app_douyin': 'Douyin',
     'app_minecraft': 'Minecraft',
     'app_spotify': 'Spotify',
+    'app_assistant': 'Google Assistant',
+    'app_add_app': 'Tambah Aplikasi',
 
     // Widget Names
     'widget_schedule_name': 'Widget Jadual',
@@ -788,6 +782,7 @@ export const translations: Record<Language, Record<string, string>> = {
     'category_education': 'Pendidikan',
     'category_google': 'Google',
     'category_tools': 'Alatan',
+    'category_custom': 'Aplikasi Tersuai',
 
     // General
     'document_title': "Desktop {{name}}",
@@ -923,7 +918,6 @@ export const translations: Record<Language, Record<string, string>> = {
     // English Dictionary App
     'dictionary_placeholder_english': 'Masukkan perkataan Inggeris...',
     'dictionary_initial_title_english': 'Kamus Inggeris',
-    'dictionary_initial_subtitle_english': 'Masukkan perkataan untuk melihat definisi dan penggunaannya',
     'dictionary_section_word_forms': 'Bentuk Perkataan',
     'dictionary_section_synonyms': 'Sinonim',
     'dictionary_section_antonyms': 'Antonim',
@@ -939,17 +933,7 @@ export const translations: Record<Language, Record<string, string>> = {
     'calculator_add': 'Tambah',
     'calculator_decimal': 'Perpuluhan',
     'calculator_equals': 'Sama dengan',
-
-    // Notes App
-    'notes_title': 'Nota',
-    'notes_placeholder': 'Tambah tugasan baharu...',
-    'notes_add': 'Tambah',
-    'notes_empty_state_l1': 'Tiada apa-apa di sini',
-    'notes_empty_state_l2': 'Tambah tugasan untuk bermula!',
-    'notes_aria_mark_incomplete': 'Tanda sebagai belum selesai',
-    'notes_aria_mark_complete': 'Tanda sebagai selesai',
-    'notes_aria_delete': 'Padam tugasan',
-
+    
     // Tic-Tac-Toe App
     'ttt_winner': 'Pemenang: {{player}}',
     'ttt_draw': 'Seri!',
@@ -1023,7 +1007,7 @@ export const translations: Record<Language, Record<string, string>> = {
     'security_error_too_short': 'Kata laluan baharu mestilah sekurang-kurangnya 4 aksara',
     'security_error_mismatch': 'Kata laluan baharu tidak sepadan',
     'security_success_message': 'Kata laluan berjaya dikemas kini',
-    
+
     // Assistant
     'assistant_aria': 'Xiao Zhi',
     'assistant_initial_message': 'Hai, saya Xiao Zhi. Apa yang boleh saya bantu?',
@@ -1045,18 +1029,7 @@ export const translations: Record<Language, Record<string, string>> = {
     'assistant_thinking': 'Berfikir...',
     'assistant_mic_prompt': 'Ketik mikrofon untuk bercakap',
     'assistant_confirmation_generic': 'OK, selesai.',
-
-    // Camera App
-    'camera_error_access': 'Tidak dapat mengakses kamera. Sila semak kebenaran.',
-    'camera_capture_alt': 'Foto yang ditangkap',
-    'camera_retake_photo': 'Ambil Semula',
-    'camera_download_photo': 'Muat Turun',
-    'camera_take_photo': 'Ambil Foto',
-
-    // Information Bus Station
-    'information_station_title': 'Stesen Info',
-    'information_station_empty_prompt': 'Seret dan lepas teks dari aplikasi di sini untuk menyimpannya.',
-
+    
     // Slides App
     'slides_create_with_ai': 'Cipta dengan AI',
     'slides_add_slide': 'Slaid Baharu',
@@ -1097,5 +1070,20 @@ export const translations: Record<Language, Record<string, string>> = {
     'slides_ai_summarizing': 'Meringkaskan...',
     'slides_ai_summary_button': 'Jana Ringkasan',
     'slides_ai_summary_result': 'Hasil Ringkasan',
+    
+    // Add App
+    'add_app_description': 'Tambah mana-mana laman web ke desktop anda sebagai aplikasi.',
+    'add_app_name_label': 'Nama Aplikasi',
+    'add_app_name_placeholder': 'Aplikasi Saya',
+    'add_app_url_label': 'URL Aplikasi',
+    'add_app_url_placeholder': 'https://example.com',
+    'add_app_icon_label': 'URL Ikon (Pilihan)',
+    'add_app_icon_placeholder': 'https://example.com/icon.png',
+    'add_app_button': 'Tambah Aplikasi',
+    'add_app_preview': 'Pratonton',
+    'add_app_error_required': 'Sila isi nama dan URL aplikasi.',
+    'add_app_error_invalid_url': 'Sila masukkan URL yang sah.',
+    'add_app_error_generic': 'Ralat berlaku semasa menyimpan aplikasi.',
+    'add_app_success': 'Berjaya menambah "{{name}}!"',
   },
 };

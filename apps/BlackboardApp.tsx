@@ -1,41 +1,61 @@
-import React, { useRef, useEffect, useState } from 'react';
+import React, { useRef, useEffect, useState, useMemo } from 'react';
 import { useLanguage } from '../contexts/LanguageContext';
+
+// Define preset sizes for the canvas
+const PRESET_SIZES = {
+  'A4-landscape': { name: 'A4 Landscape', width: 842, height: 595 },
+  'A4-portrait': { name: 'A4 Portrait', width: 595, height: 842 },
+  'A3-landscape': { name: 'A3 Landscape', width: 1190, height: 842 },
+  'A3-portrait': { name: 'A3 Portrait', width: 842, height: 1190 },
+  'A2-landscape': { name: 'A2 Landscape', width: 1684, height: 1190 },
+  'A2-portrait': { name: 'A2 Portrait', width: 1190, height: 1684 },
+  'custom': { name: 'Custom' },
+};
 
 const BlackboardApp: React.FC = () => {
   const { t } = useLanguage();
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const contextRef = useRef<CanvasRenderingContext2D | null>(null);
   const [isDrawing, setIsDrawing] = useState(false);
-  const [color, setColor] = useState('#FFFFFF');
+  const [color, setColor] = useState('#000000'); // Default to black for white paper
   const [lineWidth, setLineWidth] = useState(5);
   const [isErasing, setIsErasing] = useState(false);
+  const [canvasSizePreset, setCanvasSizePreset] = useState('A4-landscape');
+  const [customDimensions, setCustomDimensions] = useState({ width: 842, height: 595 });
+  const [isCustomColorPickerActive, setIsCustomColorPickerActive] = useState(false);
 
+  const currentDimensions = useMemo(() => {
+    if (canvasSizePreset === 'custom') {
+      return customDimensions;
+    }
+    return PRESET_SIZES[canvasSizePreset as keyof Omit<typeof PRESET_SIZES, 'custom'>];
+  }, [canvasSizePreset, customDimensions]);
+
+  // Canvas setup effect - runs when size changes
   useEffect(() => {
     const canvas = canvasRef.current;
     if (!canvas) return;
 
-    // Adjust canvas size to its container's size
-    const parent = canvas.parentElement;
-    if (parent) {
-      const { clientWidth, clientHeight } = parent;
-      canvas.width = clientWidth * 2; // Use scale for better resolution
-      canvas.height = clientHeight * 2;
-      canvas.style.width = `${clientWidth}px`;
-      canvas.style.height = `${clientHeight}px`;
-      
-      const context = canvas.getContext('2d');
-      if (!context) return;
-      context.scale(2, 2);
-      context.lineCap = 'round';
-      context.strokeStyle = color;
-      context.lineWidth = lineWidth;
-      contextRef.current = context;
-    }
-  }, []);
+    const { width, height } = currentDimensions;
+    const scale = 2; // For high-resolution displays
+    canvas.width = width * scale;
+    canvas.height = height * scale;
+    canvas.style.width = `${width}px`;
+    canvas.style.height = `${height}px`;
 
+    const context = canvas.getContext('2d');
+    if (!context) return;
+    context.scale(scale, scale);
+    context.lineCap = 'round';
+    context.strokeStyle = color;
+    context.lineWidth = lineWidth;
+    contextRef.current = context;
+  }, [currentDimensions]);
+
+  // Drawing properties effect - runs when color, size, or eraser mode changes
   useEffect(() => {
     if (contextRef.current) {
-      contextRef.current.strokeStyle = isErasing ? '#262626' : color; // Blackboard color for eraser
+      contextRef.current.strokeStyle = isErasing ? '#FFFFFF' : color;
       contextRef.current.lineWidth = isErasing ? lineWidth * 4 : lineWidth;
     }
   }, [color, lineWidth, isErasing]);
@@ -86,37 +106,72 @@ const BlackboardApp: React.FC = () => {
     }
   };
   
-  const chalkColors = ['#FFFFFF', '#FF5252', '#448AFF', '#FFEB3B', '#4CAF50'];
+  const chalkColors = ['#000000', '#FF5252', '#448AFF', '#FFEB3B', '#4CAF50'];
 
   return (
     <div className="h-full w-full flex flex-col bg-[#262626] -m-4">
-      <div className="flex-shrink-0 p-2 bg-black/20 flex items-center justify-between gap-4 text-outline z-10 flex-wrap">
+      <div className="flex-shrink-0 p-2 bg-black/20 flex items-center justify-center md:justify-between gap-4 text-outline z-10 flex-wrap">
+        {/* Size Controls */}
+        <div className="flex items-center gap-2">
+            <label htmlFor="size-preset" className="text-sm">Size</label>
+            <select
+              id="size-preset"
+              value={canvasSizePreset}
+              onChange={e => setCanvasSizePreset(e.target.value)}
+              className="p-1 rounded bg-white/10 text-outline border-transparent focus:ring-2 focus:ring-blue-500"
+            >
+              {Object.entries(PRESET_SIZES).map(([key, { name }]) => (
+                <option key={key} value={key} className="bg-gray-700">{name}</option>
+              ))}
+            </select>
+            {canvasSizePreset === 'custom' && (
+              <div className="flex items-center gap-1">
+                <input type="number" value={customDimensions.width} onChange={e => setCustomDimensions(d => ({...d, width: Math.max(1, parseInt(e.target.value) || 1)}))} className="w-16 p-1 rounded bg-white/10 text-outline text-sm" />
+                <span className="text-sm">x</span>
+                <input type="number" value={customDimensions.height} onChange={e => setCustomDimensions(d => ({...d, height: Math.max(1, parseInt(e.target.value) || 1)}))} className="w-16 p-1 rounded bg-white/10 text-outline text-sm" />
+              </div>
+            )}
+        </div>
+
+        {/* Color Controls */}
         <div className="flex items-center gap-2">
             <span className="text-sm mr-2">{t('blackboard_color')}</span>
             {chalkColors.map(c => (
                  <button 
                     key={c}
-                    onClick={() => { setColor(c); setIsErasing(false); }}
-                    className={`w-8 h-8 rounded-full border-2 transition-transform transform hover:scale-110 ${color === c && !isErasing ? 'border-white' : 'border-transparent'}`}
+                    onClick={() => { setColor(c); setIsErasing(false); setIsCustomColorPickerActive(false); }}
+                    className={`w-8 h-8 rounded-full border-2 transition-transform transform hover:scale-110 ${color === c && !isErasing && !isCustomColorPickerActive ? 'border-white' : 'border-transparent'}`}
                     style={{ backgroundColor: c }}
                     aria-label={`${t('blackboard_aria_color_picker')} ${c}`}
                  />
             ))}
+            <div className={`w-8 h-8 p-0.5 rounded-full border-2 transition-transform transform hover:scale-110 ${isCustomColorPickerActive ? 'border-white' : 'border-transparent'}`}>
+                <input
+                    type="color"
+                    value={color}
+                    onChange={e => { setColor(e.target.value); setIsErasing(false); setIsCustomColorPickerActive(true); }}
+                    className="w-full h-full p-0 bg-transparent rounded-full cursor-pointer appearance-none border-none"
+                    style={{ 'WebkitAppearance': 'none', 'MozAppearance': 'none', 'appearance': 'none', 'backgroundColor': 'transparent', 'border': 'none', 'cursor': 'pointer' }}
+                    aria-label={t('blackboard_aria_color_picker')}
+                />
+            </div>
         </div>
-        <div className="flex items-center gap-2">
-            <label htmlFor="pen-size" className="text-sm whitespace-nowrap">{t('blackboard_pen_size')}</label>
-            <input 
-                id="pen-size"
-                type="range"
-                min="1"
-                max="20"
-                value={lineWidth}
-                onChange={e => setLineWidth(Number(e.target.value))}
-                className="w-24"
-                aria-label={t('blackboard_aria_pen_size')}
-            />
-        </div>
+        
+        {/* Tool & Action Controls */}
         <div className="flex items-center gap-4">
+            <div className="flex items-center gap-2">
+                <label htmlFor="pen-size" className="text-sm whitespace-nowrap">{t('blackboard_pen_size')}</label>
+                <input 
+                    id="pen-size"
+                    type="range"
+                    min="1"
+                    max="20"
+                    value={lineWidth}
+                    onChange={e => setLineWidth(Number(e.target.value))}
+                    className="w-24"
+                    aria-label={t('blackboard_aria_pen_size')}
+                />
+            </div>
             <button 
                 onClick={() => setIsErasing(!isErasing)}
                 className={`px-3 py-2 rounded-md flex items-center gap-2 transition-colors ${isErasing ? 'bg-blue-500/80' : 'bg-black/20'}`}
@@ -135,7 +190,7 @@ const BlackboardApp: React.FC = () => {
             </button>
         </div>
       </div>
-      <div className="flex-grow relative">
+      <div className="flex-grow flex items-center justify-center p-4 overflow-auto">
          <canvas
             ref={canvasRef}
             onMouseDown={startDrawing}
@@ -145,7 +200,7 @@ const BlackboardApp: React.FC = () => {
             onTouchStart={startDrawing}
             onTouchEnd={finishDrawing}
             onTouchMove={draw}
-            className="absolute top-0 left-0"
+            className="bg-white shadow-lg"
          />
       </div>
     </div>

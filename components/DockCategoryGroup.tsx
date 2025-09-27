@@ -46,7 +46,7 @@ const DockCategoryGroup: React.FC<DockCategoryGroupProps> = ({ category, apps, i
   return (
     <div className="relative" ref={groupRef}>
       {isOpen && (
-        <div className="absolute bottom-full mb-2 w-48 taskbar-background backdrop-blur-3xl ring-1 ring-black/10 dark:ring-white/10 rounded-xl shadow-2xl p-2 flex flex-col gap-1 animate-fade-in-up">
+        <div className="absolute bottom-full mb-2 w-48 taskbar-background backdrop-blur-3xl ring-1 ring-black/10 dark:ring-white/10 rounded-2xl shadow-2xl p-2 flex flex-col gap-1 animate-fade-in-up">
           {apps.map((app) => {
             const runningInstances = windows.filter(w => w.appId === app.id && !w.isClosing);
             const isRunning = runningInstances.length > 0;
@@ -57,7 +57,7 @@ const DockCategoryGroup: React.FC<DockCategoryGroupProps> = ({ category, apps, i
               <button
                 key={app.id}
                 onClick={() => handleAppClick(app.id)}
-                className="w-full flex items-center text-left px-3 py-2 text-sm text-outline rounded-lg hover:bg-white/20 dark:hover:bg-white/10 transition-colors duration-150 relative"
+                className="w-full flex items-center text-left px-3 py-2 text-sm text-outline rounded-xl hover:bg-white/20 dark:hover:bg-white/10 transition-colors duration-150 relative"
               >
                 {app.icon ? (
                     <img src={app.icon} alt="" className="w-5 h-5 object-contain mr-2" />

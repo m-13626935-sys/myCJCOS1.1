@@ -42,7 +42,7 @@ export const ScheduleWidget: React.FC = () => {
     }, [updateEvents]);
 
     return (
-        <div className="w-full h-full bg-blue-500/10 p-4 rounded-xl text-outline overflow-hidden flex flex-col">
+        <div className="w-full h-full bg-blue-500/10 p-4 rounded-2xl text-outline overflow-hidden flex flex-col">
             <h3 className="text-lg font-bold mb-2 flex-shrink-0">{t('schedule_widget_today')}</h3>
             <div className="flex-grow overflow-y-auto -mr-2 pr-2">
                 {events.length > 0 ? (
@@ -165,7 +165,7 @@ export const TimerWidget: React.FC = () => {
     };
 
     return (
-        <div className="w-full h-full flex flex-col items-center justify-center bg-blue-900/20 p-4 rounded-xl text-outline">
+        <div className="w-full h-full flex flex-col items-center justify-center bg-blue-900/20 p-4 rounded-2xl text-outline">
             <h3 className="text-sm font-bold absolute top-3 left-4">{t('widget_timer_name')}</h3>
             {isTimerSet ? (
                  <div className={`font-mono text-4xl tracking-wider text-center ${isFinished ? 'animate-pulse' : ''}`} aria-live="polite">
@@ -180,7 +180,7 @@ export const TimerWidget: React.FC = () => {
             {isTimerSet && (
                  <button 
                     onClick={handleReset} 
-                    className="absolute bottom-3 right-3 px-2 py-1 text-xs bg-black/20 rounded-md hover:bg-black/40 transition-colors"
+                    className="absolute bottom-3 right-3 px-2 py-1 text-xs bg-black/20 rounded-lg hover:bg-black/40 transition-colors"
                 >
                     {t('timer_cancel')}
                 </button>
@@ -193,7 +193,7 @@ export const TimerWidget: React.FC = () => {
 // ---- CalculatorWidget ----
 export const CalculatorWidget: React.FC = () => {
     return (
-        <div className="w-full h-full bg-black/20 rounded-xl overflow-hidden">
+        <div className="w-full h-full bg-black/20 rounded-2xl overflow-hidden">
              <CalculatorApp />
         </div>
     );
