@@ -1,4 +1,3 @@
-
 import { GoogleGenAI, GenerateContentResponse, Chat, Type } from "@google/genai";
 import type { ChatMessage, GroundingChunk, DictionaryEntry, EnglishDictionaryEntry, CalendarEvent, Slide } from '../types';
 

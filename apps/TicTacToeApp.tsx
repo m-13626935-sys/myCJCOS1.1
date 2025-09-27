@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from 'react';
 import { useLanguage } from '../contexts/LanguageContext';
 
@@ -37,7 +36,7 @@ const TicTacToeApp: React.FC = () => {
       const nextPlayer = xIsNext ? playerXEmoji : playerOEmoji;
       setStatus(t('ttt_player_turn', { player: nextPlayer }));
     }
-  }, [board, xIsNext, t]);
+  }, [board, xIsNext, t, playerOEmoji, playerXEmoji]);
 
   const handleClick = (i: number) => {
     if (calculateWinner(board) || board[i]) {
