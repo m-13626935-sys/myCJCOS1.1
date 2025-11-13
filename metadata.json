@@ -1,8 +1,6 @@
 {
-  "requestFramePermissions": [
-    "microphone"
-  ],
-  "name": "A GeminiCJC1.0",
+  "requestFramePermissions": [],
+  "name": "Gemini AI Fictional OS 1.0",
   "description": "",
   "prompt": ""
 }

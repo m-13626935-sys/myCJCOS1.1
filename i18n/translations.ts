@@ -9,17 +9,16 @@ export const translations: Record<Language, Record<string, string>> = {
     'app_digital_human_chat': '数字人对话',
     'app_chat': '小智',
     'app_slides': '灵幻AI幻灯片',
-    'app_image_studio': '星绘AI图像室',
+    'app_image_studio': '星绘AI图片室',
     'app_clock': '时钟',
     'app_schedule': '日程安排',
     'app_calculator': '计算器',
     'app_tictactoe': '井字游戏',
-    'app_blackboard': '画板',
     'app_settings': '设置',
-    'app_about': '关于系统',
     'app_add_app': '添加应用',
     'app_chinese_dictionary': '汉语词典',
     'app_english_dictionary': '英文词典',
+    'app_about': '关于',
 
     // Widget Names
     'widget_schedule_name': '日程小组件',
@@ -34,7 +33,7 @@ export const translations: Record<Language, Record<string, string>> = {
 
     // General
     'document_title': '{{name}}的桌面',
-    'document_title_default': 'CJC OS',
+    'document_title_default': 'Gemini AI 虚构 OS',
     'user': '用户',
     'restart': '重启',
     'shutdown': '关机',
@@ -112,27 +111,18 @@ export const translations: Record<Language, Record<string, string>> = {
     // Timer Widget
     'widget_timer_not_set': '计时器未设置',
     
-    // About App
-    'about_title': '关于 GeminiCJCOS',
-    'about_name': '应用名称',
-    'about_name_value': 'GeminiCJC操作系统',
-    'about_version': '版本',
-    'about_author': '作者',
-    'about_author_value': '郑家诚,gemini',
-    'about_features': '功能',
-    'about_feature_1': '基于React的桌面环境',
-    'about_feature_2': '窗口管理系统',
-    'about_feature_3': '集成Gemini AI功能',
-    'about_note': '注意',
-    'about_note_value': '这是一个用于演示目的的项目，并非一个完整的操作系统。',
-
     // Image Studio App
     'image_studio_placeholder': '输入你的创意...',
     'image_studio_generate': '生成',
     'image_studio_generating': '正在生成图像...',
+    'image_studio_loading_1': '正在用像素绘画...',
+    'image_studio_loading_2': '正在咨询数字缪斯...',
+    'image_studio_loading_3': '正在预热创意电路...',
     'image_studio_set_wallpaper': '设为壁纸',
     'image_studio_prompt': '输入提示以生成图像',
     'error_image_generation_failed': '图像生成失败，请重试',
+    'theme_studio_palette': '灵感色板',
+    'theme_studio_apply': '应用主题和壁纸',
 
     // Gemini Chat App
     'gemini_chat_default_sys': '你是一个乐于助人的 AI 助理，名叫“小智”。',
@@ -149,27 +139,18 @@ export const translations: Record<Language, Record<string, string>> = {
     'dh_word_formation_assistant_name': '文心', 'dh_word_formation_assistant_desc': '分析汉字结构，解释构词方法。', 'dh_word_formation_assistant_sys': '你是一位名叫“文心”的汉字构词专家，能够详细分析汉字的音、形、义。', 'dh_word_formation_assistant_init': '你好，我是文心，想了解哪个汉字的构成？', 'dh_word_formation_assistant_placeholder': '输入一个汉字...',
     'dh_prompt_assistant_name': '创灵', 'dh_prompt_assistant_desc': '优化你的AI提示词，获得更好效果。', 'dh_prompt_assistant_sys': '你是一位名叫“创灵”的提示词工程专家，擅长优化和构建高效的AI提示词。', 'dh_prompt_assistant_init': '你好，我是创灵，需要我帮你优化提示词吗？', 'dh_prompt_assistant_placeholder': '输入你的原始提示词...',
 
-    // Chinese Dictionary App
+    // Bilingual Dictionary App
     'dictionary_error_unknown': '查询时发生错误',
-    'dictionary_placeholder_chinese': '输入一个中文词语...',
     'dictionary_search_aria': '搜索',
-    'dictionary_initial_title_chinese': '汉语词典',
-    'dictionary_initial_subtitle_chinese': '输入词语以查看释义和用法',
+    'dictionary_placeholder_chinese': '输入中文词语...',
+    'dictionary_placeholder_english': '输入英文单词...',
+    'dictionary_initial_subtitle_bilingual': '输入词语以查看双语释义',
     'dictionary_easter_egg': '老寿星生日快乐！',
     'dictionary_section_definition': '释义',
-    'dictionary_section_emotion': '情感分析',
     'dictionary_section_examples': '例句',
     'dictionary_section_etymology': '词源',
     'dictionary_section_related': '相关词语',
-    'error_chinese_dictionary_parse': '无法解析词典数据',
-
-    // English Dictionary App
-    'dictionary_placeholder_english': '输入一个英文单词...',
-    'dictionary_initial_title_english': '英文词典',
-    'dictionary_section_word_forms': '单词形态',
-    'dictionary_section_synonyms': '同义词',
-    'dictionary_section_antonyms': '反义词',
-    'error_english_dictionary_parse': '无法解析词典数据',
+    'error_dictionary_parse': '无法解析词典数据',
 
     // Calculator App
     'calculator_error': '错误',
@@ -188,16 +169,6 @@ export const translations: Record<Language, Record<string, string>> = {
     'ttt_player_turn': '轮到 {{player}}',
     'ttt_reset_game': '重新开始',
 
-    // Blackboard App
-    'blackboard_color': '颜色',
-    'blackboard_aria_color_picker': '颜色选择器',
-    'blackboard_pen_size': '笔触大小',
-    'blackboard_aria_pen_size': '笔触大小滑块',
-    'blackboard_eraser': '橡皮擦',
-    'blackboard_aria_eraser': '切换橡皮擦',
-    'blackboard_clear': '清空',
-    'blackboard_aria_clear': '清空画板',
-
     // Schedule App
     'schedule_edit_event': '编辑事件',
     'schedule_add_event': '添加事件',
@@ -215,10 +186,21 @@ export const translations: Record<Language, Record<string, string>> = {
     'settings_appearance_category': '外观',
     'settings_ai_category': 'AI功能',
     'settings_security_category': '安全',
+    'settings_taskbar_category': '任务栏',
+    'settings_about_category': '关于',
+    'settings_taskbar_autohide_label': '自动隐藏任务栏',
+    'settings_taskbar_autohide_desc': '开启后，任务栏和AI搜索栏将在窗口最大化时隐藏，并在鼠标移至屏幕底部时出现。',
+    'settings_taskbar_autohide_duration_label': '显示时长',
+    'settings_taskbar_autohide_duration_desc': '设置当鼠标移开后，任务栏和搜索栏保持可见的时间。',
+    'settings_taskbar_seconds': '{{count}} 秒',
     // Appearance Settings
     'appearance_color_mode': '颜色模式',
     'appearance_mode_light': '浅色',
+    'appearance_mode_adaptive': '自适应',
+    'appearance_mode_adaptive_desc': '根据一天中的时间自动在浅色和深色模式之间切换。',
     'appearance_mode_gradient': '渐变',
+    'appearance_mode_theme': 'AI 主题',
+    'appearance_launch_theme_app': '打开灵感主题工作室',
     'appearance_wallpaper': '壁纸',
     'appearance_paste_url': '粘贴图片网址...',
     'appearance_apply': '应用',
@@ -233,6 +215,9 @@ export const translations: Record<Language, Record<string, string>> = {
     'appearance_time_format': '时间格式',
     'time_format_12h': '12 小时制',
     'time_format_24h': '24 小时制',
+    'theme_automation_title': '主题自动化',
+    'theme_automation_label': '自动匹配壁纸主题',
+    'theme_automation_desc': '根据壁纸自动生成新的用户界面主题。',
     // AI Settings
     'settings_ai_enable_toggle_label': '开启AI功能',
     'settings_ai_enable_toggle_desc': '开启或关闭所有与 AI 相关的功能，包括应用和助手。',
@@ -242,22 +227,31 @@ export const translations: Record<Language, Record<string, string>> = {
     'settings_ai_binding_toggle_desc': '允许 AI 助手与系统内应用（如日程、时钟）进行交互。',
     'settings_ai_integrations_title': '小智应用绑定和示例',
     'settings_ai_integrations_desc': 'AI 助手可以与以下应用交互：',
+    // FIX: Added missing translation keys for AI integrations.
+    'settings_ai_integration_memory': '记忆中心 - 储存和回忆信息',
     'settings_ai_integration_schedule': '日程安排 - 创建事件',
     'settings_ai_integration_clock': '时钟 - 设置计时器',
     'settings_ai_integration_appearance': '外观 - 通过生成图片更换壁纸',
-    // Security Settings
-    'security_change_password_title': '更改密码',
-    'security_current_password': '当前密码',
-    'security_new_password': '新密码',
-    'security_confirm_new_password': '确认新密码',
-    'security_save_button': '保存更改',
-    'security_error_incorrect_current': '当前密码不正确',
-    'security_error_too_short': '新密码必须至少4个字符',
-    'security_error_mismatch': '新密码不匹配',
-    'security_success_message': '密码已成功更新',
+    'settings_ai_integration_chat': '小智 - 辅助内容创作与翻译',
+    'settings_ai_integration_recorder': 'AI录音机 - 转录和总结音频',
+    // About App
+    'about_title': '关于 Gemini AI 虚构 OS',
+    'about_name': '应用名称',
+    'about_name_value': 'Gemini AI 虚构 OS',
+    'about_version': '版本',
+    'about_author': '作者',
+    'about_author_value': 'GEMINI Ai',
+    'about_features': '主要功能',
+    'about_feature_1': '窗口化多任务操作系统',
+    'about_feature_2': '深度集成的 Gemini AI 功能',
+    'about_feature_3': '可定制的 UI 和主题',
+    'about_note': '注意',
+    'about_note_value': '这是一个用于演示目的的项目。',
+
 
     // Assistant
-    'assistant_aria': '小智',
+    'assistant_aria': '小智助手',
+    'assistant_title': '小智助手',
     'assistant_initial_message': '你好，我是小智。有什么可以帮忙的吗？',
     'assistant_error_generic': '抱歉，我遇到了一些麻烦。',
     'assistant_error_unsupported_browser': '你的浏览器不支持语音识别。',
@@ -269,14 +263,17 @@ export const translations: Record<Language, Record<string, string>> = {
     'assistant_summarize_action_prefix': '帮我总结',
     'assistant_summarize_button': '总结粘贴的文本',
     'assistant_attach_file_aria': '附加文件',
-    'assistant_placeholder': '输入消息或使用麦克风...',
+    'assistant_placeholder': '输入消息...',
     'assistant_submit_aria': '提交',
     'assistant_aria_start_listening': '开始收听',
     'assistant_aria_stop_listening': '停止收听',
     'assistant_listening': '正在聆听...',
     'assistant_thinking': '正在思考...',
-    'assistant_mic_prompt': '点击麦克风说话',
+    'assistant_mic_prompt': '点击麦克风或输入',
     'assistant_confirmation_generic': '好的，已完成。',
+    'assistant_suggestion_1': '帮我设置一个10分钟的计时器',
+    'assistant_suggestion_2': '生成一张赛博朋克城市的壁纸',
+    'assistant_suggestion_3': '明天上午10点有个团队会议',
     
     // Slides App
     'slides_create_with_ai': 'AI 生成',
@@ -334,6 +331,41 @@ export const translations: Record<Language, Record<string, string>> = {
     'add_app_error_generic': '保存应用时出错。',
     'add_app_success': '已成功添加“{{name}}”！',
 
+    // AI Search
+    'ai_search_placeholder': '用小松搜索不同的资讯',
+    'ai_search_disclaimer': '是Ai生成的，可能会有错误',
+    'ai_search_error': '抱歉，搜索时遇到问题，请稍后重试。',
+    'ai_search_references': '参考文献:',
+    'ai_search_button_aria': '搜索',
+    'ai_search_close_aria': '关闭搜索结果',
+    'ai_search_circle_search_aria': '圈搜',
+    'ai_search_circle_search_title': '小松AI圈搜',
+    'ai_search_circle_search_prompt': '在屏幕上圈出内容进行搜索',
+    
+    // Memory Hub App
+    'memory_hub_add': '添加记忆',
+    'memory_hub_placeholder': '记录你的想法、链接或上传图片...',
+    'memory_hub_categorizing': '正在智能分类...',
+    'memory_hub_all_memories': '所有记忆',
+    'memory_hub_collections': '智能合集',
+    'memory_hub_no_memories': '还没有任何记忆。尝试添加一个吧！',
+    'memory_hub_delete': '删除记忆',
+    'memory_hub_empty_state': '您的记忆中心是空的',
+    'memory_hub_empty_state_desc': '使用下面的输入框或告诉小智助手“帮我记住...”来开始填充您的第二大脑。',
+
+    // AI Recorder App
+    'ai_recorder_status_idle': '点击开始录音',
+    'ai_recorder_status_recording': '正在录音...',
+    'ai_recorder_status_stopped': '录音已停止。',
+    'ai_recorder_transcribe_button': '转录与分析',
+    'ai_recorder_transcribing': '正在转录...',
+    'ai_recorder_summary_button': '生成摘要',
+    'ai_recorder_title_button': '生成标题',
+    'ai_recorder_summary_prompt': '请将以下录音转录内容总结为会议纪要格式，包含关键点和待办事项列表',
+    'ai_recorder_summary_label': 'AI 摘要',
+    'ai_recorder_transcript_label': '录音文本',
+    'ai_recorder_results_placeholder': '录音分析结果将显示在此处。',
+
   },
   en: {
     // Locales
@@ -343,17 +375,16 @@ export const translations: Record<Language, Record<string, string>> = {
     'app_digital_human_chat': 'Digital Human Chat',
     'app_chat': 'Xiao Zhi',
     'app_slides': 'Idea Slide',
-    'app_image_studio': 'Star Paint',
+    'app_image_studio': 'Image Studio',
     'app_clock': 'Clock',
     'app_schedule': 'Schedule',
     'app_calculator': 'Calculator',
     'app_tictactoe': 'Tic-Tac-Toe',
-    'app_blackboard': 'Drawing Board',
     'app_settings': 'Settings',
-    'app_about': 'About System',
     'app_add_app': 'Add App',
     'app_chinese_dictionary': 'Chinese Dictionary',
     'app_english_dictionary': 'English Dictionary',
+    'app_about': 'About',
 
     // Widget Names
     'widget_schedule_name': 'Schedule Widget',
@@ -368,7 +399,7 @@ export const translations: Record<Language, Record<string, string>> = {
 
     // General
     'document_title': "{{name}}'s Desktop",
-    'document_title_default': 'CJC OS',
+    'document_title_default': 'Gemini AI Fictional OS',
     'user': 'User',
     'restart': 'Restart',
     'shutdown': 'Shut Down',
@@ -446,34 +477,25 @@ export const translations: Record<Language, Record<string, string>> = {
     // Timer Widget
     'widget_timer_not_set': 'Timer not set',
     
-    // About App
-    'about_title': 'About GeminiCJCOS',
-    'about_name': 'App Name',
-    'about_name_value': 'GeminiCJC Operating System',
-    'about_version': 'Version',
-    'about_author': 'Author',
-    'about_author_value': 'Zheng Jiacheng, gemini',
-    'about_features': 'Features',
-    'about_feature_1': 'React-based desktop environment',
-    'about_feature_2': 'Window management system',
-    'about_feature_3': 'Integrated Gemini AI features',
-    'about_note': 'Note',
-    'about_note_value': 'This is a project for demonstration purposes and not a full-fledged OS.',
-
     // Image Studio App
     'image_studio_placeholder': 'Enter your creative prompt...',
     'image_studio_generate': 'Generate',
     'image_studio_generating': 'Generating image...',
+    'image_studio_loading_1': 'Painting with pixels...',
+    'image_studio_loading_2': 'Consulting the digital muse...',
+    'image_studio_loading_3': 'Warming up the creative circuits...',
     'image_studio_set_wallpaper': 'Set as Wallpaper',
     'image_studio_prompt': 'Enter a prompt to generate an image',
     'error_image_generation_failed': 'Image generation failed, please try again',
+    'theme_studio_palette': 'Inspiration Palette',
+    'theme_studio_apply': 'Apply Theme & Wallpaper',
 
     // Gemini Chat App
     'gemini_chat_default_sys': 'You are a helpful AI assistant named "Xiao Zhi".',
     'gemini_chat_default_init': 'Hello! I\'m Xiao Zhi, how can I help you today?',
     'gemini_chat_default_placeholder': 'Type your message...',
     'gemini_chat_error_message': 'Sorry, I encountered an error. Please try again.',
-    
+
     // Digital Human Selector App
     'dh_selector_subtitle': 'Select a persona to start a conversation',
     'dh_start_chat': 'Start Chat',
@@ -483,28 +505,19 @@ export const translations: Record<Language, Record<string, string>> = {
     'dh_word_formation_assistant_name': 'LexiMind', 'dh_word_formation_assistant_desc': 'Analyzes word structures and explains their origins.', 'dh_word_formation_assistant_sys': 'You are a word etymology expert named "LexiMind", able to analyze the sound, shape, and meaning of words.', 'dh_word_formation_assistant_init': 'Hello, I\'m LexiMind. Which word would you like to know about?', 'dh_word_formation_assistant_placeholder': 'Enter a word...',
     'dh_prompt_assistant_name': 'Idea Spark', 'dh_prompt_assistant_desc': 'Optimizes your AI prompts for better results.', 'dh_prompt_assistant_sys': 'You are a prompt engineering expert named "Idea Spark", skilled at optimizing and building effective AI prompts.', 'dh_prompt_assistant_init': 'Hi, I\'m Idea Spark. Need help refining your prompt?', 'dh_prompt_assistant_placeholder': 'Enter your original prompt...',
 
-    // Chinese Dictionary App
+    // Bilingual Dictionary App
     'dictionary_error_unknown': 'An error occurred during lookup',
-    'dictionary_placeholder_chinese': 'Enter a Chinese word...',
     'dictionary_search_aria': 'Search',
-    'dictionary_initial_title_chinese': 'Chinese Dictionary',
-    'dictionary_initial_subtitle_chinese': 'Enter a word to see its definition and usage',
+    'dictionary_placeholder_chinese': 'Enter a Chinese word...',
+    'dictionary_placeholder_english': 'Enter an English word...',
+    'dictionary_initial_subtitle_bilingual': 'Enter a word to see its bilingual definition',
     'dictionary_easter_egg': 'Happy Birthday!',
     'dictionary_section_definition': 'Definition',
-    'dictionary_section_emotion': 'Emotional Analysis',
     'dictionary_section_examples': 'Examples',
     'dictionary_section_etymology': 'Etymology',
     'dictionary_section_related': 'Related Words',
-    'error_chinese_dictionary_parse': 'Failed to parse dictionary data',
+    'error_dictionary_parse': 'Failed to parse dictionary data',
     
-    // English Dictionary App
-    'dictionary_placeholder_english': 'Enter an English word...',
-    'dictionary_initial_title_english': 'English Dictionary',
-    'dictionary_section_word_forms': 'Word Forms',
-    'dictionary_section_synonyms': 'Synonyms',
-    'dictionary_section_antonyms': 'Antonyms',
-    'error_english_dictionary_parse': 'Failed to parse dictionary data',
-
     // Calculator App
     'calculator_error': 'Error',
     'calculator_clear_all': 'All Clear',
@@ -521,16 +534,6 @@ export const translations: Record<Language, Record<string, string>> = {
     'ttt_draw': 'It\'s a draw!',
     'ttt_player_turn': 'Next player: {{player}}',
     'ttt_reset_game': 'Reset Game',
-
-    // Blackboard App
-    'blackboard_color': 'Color',
-    'blackboard_aria_color_picker': 'Color Picker',
-    'blackboard_pen_size': 'Pen Size',
-    'blackboard_aria_pen_size': 'Pen size slider',
-    'blackboard_eraser': 'Eraser',
-    'blackboard_aria_eraser': 'Toggle eraser',
-    'blackboard_clear': 'Clear',
-    'blackboard_aria_clear': 'Clear canvas',
 
     // Schedule App
     'schedule_edit_event': 'Edit Event',
@@ -549,10 +552,21 @@ export const translations: Record<Language, Record<string, string>> = {
     'settings_appearance_category': 'Appearance',
     'settings_ai_category': 'AI Features',
     'settings_security_category': 'Security',
+    'settings_taskbar_category': 'Taskbar',
+    'settings_about_category': 'About',
+    'settings_taskbar_autohide_label': 'Auto-hide the taskbar',
+    'settings_taskbar_autohide_desc': 'When enabled, the taskbar and AI search bar will hide when a window is maximized and appear when you move your mouse to the bottom of the screen.',
+    'settings_taskbar_autohide_duration_label': 'Display Duration',
+    'settings_taskbar_autohide_duration_desc': 'Set how long the taskbar and search bar remain visible after the mouse moves away.',
+    'settings_taskbar_seconds': '{{count}} seconds',
     // Appearance Settings
     'appearance_color_mode': 'Color Mode',
     'appearance_mode_light': 'Light',
+    'appearance_mode_adaptive': 'Adaptive',
+    'appearance_mode_adaptive_desc': 'Automatically switches between light and dark themes based on the time of day.',
     'appearance_mode_gradient': 'Gradient',
+    'appearance_mode_theme': 'AI Theme',
+    'appearance_launch_theme_app': 'Open Inspiration Theme Studio',
     'appearance_wallpaper': 'Wallpaper',
     'appearance_paste_url': 'Paste image URL...',
     'appearance_apply': 'Apply',
@@ -567,6 +581,9 @@ export const translations: Record<Language, Record<string, string>> = {
     'appearance_time_format': 'Time Format',
     'time_format_12h': '12-hour',
     'time_format_24h': '24-hour',
+    'theme_automation_title': 'Theme Automation',
+    'theme_automation_label': 'Auto-adapt Theme to Wallpaper',
+    'theme_automation_desc': 'Automatically generates a new UI theme based on the wallpaper.',
     // AI Settings
     'settings_ai_enable_toggle_label': 'Enable AI Features',
     'settings_ai_enable_toggle_desc': 'Turn on or off all AI-related features, including apps and the assistant.',
@@ -576,23 +593,31 @@ export const translations: Record<Language, Record<string, string>> = {
     'settings_ai_binding_toggle_desc': 'Allow the AI assistant to interact with system apps like Schedule and Clock.',
     'settings_ai_integrations_title': 'Xiao Zhi App Binding and Examples',
     'settings_ai_integrations_desc': 'The AI assistant can interact with the following apps:',
+    // FIX: Added missing translation keys for AI integrations.
+    'settings_ai_integration_memory': 'Memory Hub - Store and recall information',
     'settings_ai_integration_schedule': 'Schedule - Create events',
     'settings_ai_integration_clock': 'Clock - Set timers',
     'settings_ai_integration_appearance': 'Appearance - Change wallpaper by generating images',
-    // Security Settings
-    'security_change_password_title': 'Change Password',
-    'security_current_password': 'Current Password',
-    'security_new_password': 'New Password',
-    'security_confirm_new_password': 'Confirm New Password',
-    'security_save_button': 'Save Changes',
-    'security_error_incorrect_current': 'Incorrect current password',
-    'security_error_too_short': 'New password must be at least 4 characters',
-    'security_error_mismatch': 'New passwords do not match',
-    'security_success_message': 'Password updated successfully',
+    'settings_ai_integration_chat': 'Xiao Zhi - Assist in content creation & translation',
+    'settings_ai_integration_recorder': 'AI Recorder - Transcribe and summarize audio',
+    // About App
+    'about_title': 'About Gemini AI Fictional OS',
+    'about_name': 'App Name',
+    'about_name_value': 'Gemini AI Fictional OS',
+    'about_version': 'Version',
+    'about_author': 'Author',
+    'about_author_value': 'GEMINI Ai',
+    'about_features': 'Main Features',
+    'about_feature_1': 'Windowed multi-tasking OS',
+    'about_feature_2': 'Deeply integrated Gemini AI features',
+    'about_feature_3': 'Customizable UI and themes',
+    'about_note': 'Note',
+    'about_note_value': 'This is a project for demonstration purposes.',
 
     // Assistant
-    'assistant_aria': 'Xiao Zhi',
-    'assistant_initial_message': 'Hi, I\'m Xiao Zhi. How can I help?',
+    'assistant_aria': 'AI Assistant',
+    'assistant_title': 'AI Assistant',
+    'assistant_initial_message': 'Hi, I\'m your AI Assistant. How can I help?',
     'assistant_error_generic': 'Sorry, I ran into some trouble.',
     'assistant_error_unsupported_browser': 'Your browser does not support speech recognition.',
     'assistant_error_mic_permission': 'I need microphone permission to hear you.',
@@ -603,15 +628,18 @@ export const translations: Record<Language, Record<string, string>> = {
     'assistant_summarize_action_prefix': 'Summarize this for me',
     'assistant_summarize_button': 'Summarize pasted text',
     'assistant_attach_file_aria': 'Attach file',
-    'assistant_placeholder': 'Type a message or use the mic...',
+    'assistant_placeholder': 'Type a message...',
     'assistant_submit_aria': 'Submit',
     'assistant_aria_start_listening': 'Start listening',
     'assistant_aria_stop_listening': 'Stop listening',
     'assistant_listening': 'Listening...',
     'assistant_thinking': 'Thinking...',
-    'assistant_mic_prompt': 'Tap the mic to talk',
+    'assistant_mic_prompt': 'Tap mic or type',
     'assistant_confirmation_generic': 'OK, done.',
-    
+    'assistant_suggestion_1': 'Set a timer for 10 minutes',
+    'assistant_suggestion_2': 'Generate a wallpaper of a neon city',
+    'assistant_suggestion_3': 'Add "Team meeting tomorrow at 10am" to my schedule',
+
     // Slides App
     'slides_create_with_ai': 'Create with AI',
     'slides_add_slide': 'New Slide',
@@ -644,7 +672,7 @@ export const translations: Record<Language, Record<string, string>> = {
     'slides_ai_generate_draft_desc': 'Enter a topic and the AI will create a set of basic slides for you.',
     'slides_ai_draft_prompt_placeholder': 'e.g., "An introduction to quantum computing"',
     'slides_ai_prompt_button': 'Generate',
-    'slides_ai_generate_image': 'Generate & Insert Image',
+    'slides_ai_generate_image': 'Generate Image',
     'slides_ai_generate_image_desc': 'Enter a description and the AI will generate an image and add it to the current slide.',
     'slides_ai_image_prompt_placeholder': 'e.g., "An astronaut reading a book on the moon"',
     'slides_ai_summarize': 'Summarize Presentation',
@@ -652,7 +680,7 @@ export const translations: Record<Language, Record<string, string>> = {
     'slides_ai_summarizing': 'Summarizing...',
     'slides_ai_summary_button': 'Generate Summary',
     'slides_ai_summary_result': 'Summary Result',
-
+    
     // Add App
     'add_app_description': 'Add any website to your desktop as an app.',
     'add_app_name_label': 'App Name',
@@ -667,7 +695,41 @@ export const translations: Record<Language, Record<string, string>> = {
     'add_app_error_invalid_url': 'Please enter a valid URL.',
     'add_app_error_generic': 'An error occurred while saving the app.',
     'add_app_success': 'Successfully added "{{name}}"!',
+    
+    // AI Search
+    'ai_search_placeholder': 'Search for different information with Xiao Song',
+    'ai_search_disclaimer': 'Generated by AI, may contain errors',
+    'ai_search_error': 'Sorry, there was a problem searching. Please try again later.',
+    'ai_search_references': 'References:',
+    'ai_search_button_aria': 'Search',
+    'ai_search_close_aria': 'Close search results',
+    'ai_search_circle_search_aria': 'Circle Search',
+    'ai_search_circle_search_title': 'Xiao Song AI Circle Search',
+    'ai_search_circle_search_prompt': 'Circle content on the screen to search',
 
+    // Memory Hub App
+    'memory_hub_add': 'Add Memory',
+    'memory_hub_placeholder': 'Jot down your thoughts, links, or upload an image...',
+    'memory_hub_categorizing': 'Categorizing with AI...',
+    'memory_hub_all_memories': 'All Memories',
+    'memory_hub_collections': 'Smart Collections',
+    'memory_hub_no_memories': 'No memories yet. Try adding one!',
+    'memory_hub_delete': 'Delete Memory',
+    'memory_hub_empty_state': 'Your Memory Hub is empty',
+    'memory_hub_empty_state_desc': 'Start building your second brain by using the input below or telling the assistant "Remember that...".',
+
+    // AI Recorder App
+    'ai_recorder_status_idle': 'Tap to start recording',
+    'ai_recorder_status_recording': 'Recording...',
+    'ai_recorder_status_stopped': 'Recording stopped.',
+    'ai_recorder_transcribe_button': 'Transcribe & Analyze',
+    'ai_recorder_transcribing': 'Transcribing...',
+    'ai_recorder_summary_button': 'Generate Summary',
+    'ai_recorder_title_button': 'Generate Title',
+    'ai_recorder_summary_prompt': 'Please summarize the following audio transcription into meeting minutes format, including key points and a to-do list',
+    'ai_recorder_summary_label': 'AI Summary',
+    'ai_recorder_transcript_label': 'Transcript',
+    'ai_recorder_results_placeholder': 'Recording analysis results will appear here.',
   },
   ms: {
     // Locales
@@ -677,17 +739,16 @@ export const translations: Record<Language, Record<string, string>> = {
     'app_digital_human_chat': 'Sembang Manusia Digital',
     'app_chat': 'Xiao Zhi',
     'app_slides': 'Idea Slide',
-    'app_image_studio': 'Lukisan Bintang',
+    'app_image_studio': 'Studio Imej',
     'app_clock': 'Jam',
     'app_schedule': 'Jadual',
     'app_calculator': 'Kalkulator',
     'app_tictactoe': 'Tic-Tac-Toe',
-    'app_blackboard': 'Papan Lukisan',
     'app_settings': 'Tetapan',
-    'app_about': 'Perihal Sistem',
     'app_add_app': 'Tambah Aplikasi',
     'app_chinese_dictionary': 'Kamus Cina',
     'app_english_dictionary': 'Kamus Inggeris',
+    'app_about': 'Tentang',
 
     // Widget Names
     'widget_schedule_name': 'Widget Jadual',
@@ -702,7 +763,7 @@ export const translations: Record<Language, Record<string, string>> = {
 
     // General
     'document_title': "Desktop {{name}}",
-    'document_title_default': 'CJC OS',
+    'document_title_default': 'OS Fiksyen Gemini AI',
     'user': 'Pengguna',
     'restart': 'Mula Semula',
     'shutdown': 'Matikan',
@@ -780,27 +841,18 @@ export const translations: Record<Language, Record<string, string>> = {
     // Timer Widget
     'widget_timer_not_set': 'Pemasa tidak ditetapkan',
     
-    // About App
-    'about_title': 'Perihal GeminiCJCOS',
-    'about_name': 'Nama Aplikasi',
-    'about_name_value': 'Sistem Operasi GeminiCJC',
-    'about_version': 'Versi',
-    'about_author': 'Pengarang',
-    'about_author_value': 'Zheng Jiacheng, gemini',
-    'about_features': 'Ciri-ciri',
-    'about_feature_1': 'Persekitaran desktop berasaskan React',
-    'about_feature_2': 'Sistem pengurusan tetingkap',
-    'about_feature_3': 'Ciri AI Gemini Bersepadu',
-    'about_note': 'Nota',
-    'about_note_value': 'Ini adalah projek untuk tujuan demonstrasi dan bukan OS yang lengkap.',
-
     // Image Studio App
     'image_studio_placeholder': 'Masukkan gesaan kreatif anda...',
     'image_studio_generate': 'Jana',
     'image_studio_generating': 'Menjana imej...',
+    'image_studio_loading_1': 'Melukis dengan piksel...',
+    'image_studio_loading_2': 'Berunding dengan muse digital...',
+    'image_studio_loading_3': 'Memanaskan litar kreatif...',
     'image_studio_set_wallpaper': 'Tetapkan sebagai Kertas Dinding',
     'image_studio_prompt': 'Masukkan gesaan untuk menjana imej',
     'error_image_generation_failed': 'Penjanaan imej gagal, sila cuba lagi',
+    'theme_studio_palette': 'Palet Inspirasi',
+    'theme_studio_apply': 'Guna Tema & Kertas Dinding',
 
     // Gemini Chat App
     'gemini_chat_default_sys': 'Anda ialah pembantu AI yang berguna bernama "Xiao Zhi".',
@@ -817,27 +869,18 @@ export const translations: Record<Language, Record<string, string>> = {
     'dh_word_formation_assistant_name': 'LexiMind', 'dh_word_formation_assistant_desc': 'Menganalisis struktur perkataan dan menerangkan asal-usulnya.', 'dh_word_formation_assistant_sys': 'Anda seorang pakar etimologi perkataan bernama "LexiMind", mampu menganalisis bunyi, bentuk, dan makna perkataan.', 'dh_word_formation_assistant_init': 'Helo, saya LexiMind. Perkataan mana yang anda ingin tahu?', 'dh_word_formation_assistant_placeholder': 'Masukkan perkataan...',
     'dh_prompt_assistant_name': 'Idea Spark', 'dh_prompt_assistant_desc': 'Mengoptimumkan gesaan AI anda untuk hasil yang lebih baik.', 'dh_prompt_assistant_sys': 'Anda seorang pakar kejuruteraan gesaan bernama "Idea Spark", mahir dalam mengoptimumkan dan membina gesaan AI yang berkesan.', 'dh_prompt_assistant_init': 'Hai, saya Idea Spark. Perlukan bantuan untuk memperhalusi gesaan anda?', 'dh_prompt_assistant_placeholder': 'Masukkan gesaan asal anda...',
 
-    // Chinese Dictionary App
+    // Bilingual Dictionary App
     'dictionary_error_unknown': 'Ralat berlaku semasa carian',
-    'dictionary_placeholder_chinese': 'Masukkan perkataan Cina...',
     'dictionary_search_aria': 'Cari',
-    'dictionary_initial_title_chinese': 'Kamus Cina',
-    'dictionary_initial_subtitle_chinese': 'Masukkan perkataan untuk melihat definisi dan penggunaannya',
+    'dictionary_placeholder_chinese': 'Masukkan perkataan Cina...',
+    'dictionary_placeholder_english': 'Masukkan perkataan Inggeris...',
+    'dictionary_initial_subtitle_bilingual': 'Masukkan perkataan untuk melihat definisi dwibahasa',
     'dictionary_easter_egg': 'Selamat Hari Jadi!',
     'dictionary_section_definition': 'Definisi',
-    'dictionary_section_emotion': 'Analisis Emosi',
     'dictionary_section_examples': 'Contoh',
     'dictionary_section_etymology': 'Etimologi',
     'dictionary_section_related': 'Perkataan Berkaitan',
-    'error_chinese_dictionary_parse': 'Gagal menghurai data kamus',
-    
-    // English Dictionary App
-    'dictionary_placeholder_english': 'Masukkan perkataan Inggeris...',
-    'dictionary_initial_title_english': 'Kamus Inggeris',
-    'dictionary_section_word_forms': 'Bentuk Perkataan',
-    'dictionary_section_synonyms': 'Sinonim',
-    'dictionary_section_antonyms': 'Antonim',
-    'error_english_dictionary_parse': 'Gagal menghurai data kamus',
+    'error_dictionary_parse': 'Gagal menghurai data kamus',
 
     // Calculator App
     'calculator_error': 'Ralat',
@@ -856,16 +899,6 @@ export const translations: Record<Language, Record<string, string>> = {
     'ttt_player_turn': 'Giliran: {{player}}',
     'ttt_reset_game': 'Mula Semula',
 
-    // Blackboard App
-    'blackboard_color': 'Warna',
-    'blackboard_aria_color_picker': 'Pemilih Warna',
-    'blackboard_pen_size': 'Saiz Pen',
-    'blackboard_aria_pen_size': 'Peluncur saiz pen',
-    'blackboard_eraser': 'Pemadam',
-    'blackboard_aria_eraser': 'Togol pemadam',
-    'blackboard_clear': 'Kosongkan',
-    'blackboard_aria_clear': 'Kosongkan kanvas',
-
     // Schedule App
     'schedule_edit_event': 'Edit Acara',
     'schedule_add_event': 'Tambah Acara',
@@ -883,10 +916,21 @@ export const translations: Record<Language, Record<string, string>> = {
     'settings_appearance_category': 'Penampilan',
     'settings_ai_category': 'Ciri AI',
     'settings_security_category': 'Keselamatan',
+    'settings_taskbar_category': 'Bar Tugas',
+    'settings_about_category': 'Tentang',
+    'settings_taskbar_autohide_label': 'Sembunyikan bar tugas secara automatik',
+    'settings_taskbar_autohide_desc': 'Apabila didayakan, bar tugas dan bar carian AI akan disembunyikan apabila tetingkap dimaksimumkan dan muncul apabila anda menggerakkan tetikus anda ke bahagian bawah skrin.',
+    'settings_taskbar_autohide_duration_label': 'Tempoh Paparan',
+    'settings_taskbar_autohide_duration_desc': 'Tetapkan berapa lama bar tugas dan bar carian akan kekal kelihatan selepas tetikus dialihkan.',
+    'settings_taskbar_seconds': '{{count}} saat',
     // Appearance Settings
     'appearance_color_mode': 'Mod Warna',
     'appearance_mode_light': 'Cerah',
+    'appearance_mode_adaptive': 'Adaptif',
+    'appearance_mode_adaptive_desc': 'Bertukar secara automatik antara tema cerah dan gelap berdasarkan masa hari.',
     'appearance_mode_gradient': 'Kecerunan',
+    'appearance_mode_theme': 'Tema AI',
+    'appearance_launch_theme_app': 'Buka Studio Tema Inspirasi',
     'appearance_wallpaper': 'Kertas Dinding',
     'appearance_paste_url': 'Tampal URL imej...',
     'appearance_apply': 'Guna',
@@ -901,6 +945,9 @@ export const translations: Record<Language, Record<string, string>> = {
     'appearance_time_format': 'Format Masa',
     'time_format_12h': '12-jam',
     'time_format_24h': '24-jam',
+    'theme_automation_title': 'Automasi Tema',
+    'theme_automation_label': 'Suaikan Tema dengan Kertas Dinding',
+    'theme_automation_desc': 'Menjana tema UI baharu secara automatik berdasarkan kertas dinding.',
     // AI Settings
     'settings_ai_enable_toggle_label': 'Dayakan Ciri AI',
     'settings_ai_enable_toggle_desc': 'Hidupkan atau matikan semua ciri berkaitan AI, termasuk aplikasi dan pembantu.',
@@ -910,23 +957,31 @@ export const translations: Record<Language, Record<string, string>> = {
     'settings_ai_binding_toggle_desc': 'Benarkan pembantu AI berinteraksi dengan aplikasi sistem seperti Jadual dan Jam.',
     'settings_ai_integrations_title': 'Pengikatan Aplikasi Xiao Zhi dan Contoh',
     'settings_ai_integrations_desc': 'Pembantu AI boleh berinteraksi dengan aplikasi berikut:',
+    // FIX: Added missing translation keys for AI integrations.
+    'settings_ai_integration_memory': 'Hab Memori - Simpan dan ingat maklumat',
     'settings_ai_integration_schedule': 'Jadual - Buat acara',
     'settings_ai_integration_clock': 'Jam - Tetapkan pemasa',
     'settings_ai_integration_appearance': 'Penampilan - Tukar kertas dinding dengan menjana imej',
-    // Security Settings
-    'security_change_password_title': 'Tukar Kata Laluan',
-    'security_current_password': 'Kata Laluan Semasa',
-    'security_new_password': 'Kata Laluan Baharu',
-    'security_confirm_new_password': 'Sahkan Kata Laluan Baharu',
-    'security_save_button': 'Simpan Perubahan',
-    'security_error_incorrect_current': 'Kata laluan semasa salah',
-    'security_error_too_short': 'Kata laluan baharu mestilah sekurang-kurangnya 4 aksara',
-    'security_error_mismatch': 'Kata laluan baharu tidak sepadan',
-    'security_success_message': 'Kata laluan berjaya dikemas kini',
+    'settings_ai_integration_chat': 'Xiao Zhi - Bantu dalam penciptaan & terjemahan kandungan',
+    'settings_ai_integration_recorder': 'Perakam AI - Transkripsi dan ringkaskan audio',
+    // About App
+    'about_title': 'Tentang OS Fiksyen Gemini AI',
+    'about_name': 'Nama Aplikasi',
+    'about_name_value': 'OS Fiksyen Gemini AI',
+    'about_version': 'Versi',
+    'about_author': 'Pengarang',
+    'about_author_value': 'GEMINI Ai',
+    'about_features': 'Ciri-ciri Utama',
+    'about_feature_1': 'OS pelbagai tugas bertingkap',
+    'about_feature_2': 'Ciri Gemini AI yang bersepadu secara mendalam',
+    'about_feature_3': 'UI dan tema yang boleh disesuaikan',
+    'about_note': 'Nota',
+    'about_note_value': 'Ini adalah projek untuk tujuan demonstrasi.',
 
     // Assistant
-    'assistant_aria': 'Xiao Zhi',
-    'assistant_initial_message': 'Hai, saya Xiao Zhi. Apa yang boleh saya bantu?',
+    'assistant_aria': 'Pembantu AI',
+    'assistant_title': 'Pembantu AI',
+    'assistant_initial_message': 'Hai, saya Pembantu AI anda. Apa yang boleh saya bantu?',
     'assistant_error_generic': 'Maaf, saya menghadapi masalah.',
     'assistant_error_unsupported_browser': 'Pelayar anda tidak menyokong pengecaman pertuturan.',
     'assistant_error_mic_permission': 'Saya perlukan kebenaran mikrofon untuk mendengar anda.',
@@ -937,15 +992,18 @@ export const translations: Record<Language, Record<string, string>> = {
     'assistant_summarize_action_prefix': 'Ringkaskan ini untuk saya',
     'assistant_summarize_button': 'Ringkaskan teks yang ditampal',
     'assistant_attach_file_aria': 'Lampirkan fail',
-    'assistant_placeholder': 'Taip mesej atau guna mikrofon...',
+    'assistant_placeholder': 'Taip mesej...',
     'assistant_submit_aria': 'Hantar',
     'assistant_aria_start_listening': 'Mula mendengar',
     'assistant_aria_stop_listening': 'Berhenti mendengar',
     'assistant_listening': 'Mendengar...',
     'assistant_thinking': 'Berfikir...',
-    'assistant_mic_prompt': 'Ketik mikrofon untuk bercakap',
+    'assistant_mic_prompt': 'Ketik mikrofon atau taip',
     'assistant_confirmation_generic': 'OK, selesai.',
-    
+    'assistant_suggestion_1': 'Tetapkan pemasa selama 10 minit',
+    'assistant_suggestion_2': 'Jana kertas dinding bandar neon',
+    'assistant_suggestion_3': 'Tambah "Mesyuarat pasukan esok jam 10 pagi" ke jadual saya',
+
     // Slides App
     'slides_create_with_ai': 'Cipta dengan AI',
     'slides_add_slide': 'Slaid Baharu',
@@ -978,7 +1036,7 @@ export const translations: Record<Language, Record<string, string>> = {
     'slides_ai_generate_draft_desc': 'Masukkan topik dan AI akan mencipta satu set slaid asas untuk anda.',
     'slides_ai_draft_prompt_placeholder': 'cth: "Pengenalan kepada pengkomputeran kuantum"',
     'slides_ai_prompt_button': 'Jana',
-    'slides_ai_generate_image': 'Jana & Sisip Imej',
+    'slides_ai_generate_image': 'Jana Imej',
     'slides_ai_generate_image_desc': 'Masukkan penerangan dan AI akan menjana imej dan menambahkannya ke slaid semasa.',
     'slides_ai_image_prompt_placeholder': 'cth: "Angkasawan membaca buku di bulan"',
     'slides_ai_summarize': 'Ringkaskan Persembahan',
@@ -1001,5 +1059,41 @@ export const translations: Record<Language, Record<string, string>> = {
     'add_app_error_invalid_url': 'Sila masukkan URL yang sah.',
     'add_app_error_generic': 'Ralat berlaku semasa menyimpan aplikasi.',
     'add_app_success': 'Berjaya menambah "{{name}}!"',
+
+    // AI Search
+    'ai_search_placeholder': 'Cari pelbagai maklumat dengan Xiao Song',
+    'ai_search_disclaimer': 'Dihasilkan oleh AI, mungkin mengandungi ralat',
+    'ai_search_error': 'Maaf, terdapat masalah semasa mencari. Sila cuba lagi kemudian.',
+    'ai_search_references': 'Rujukan:',
+    'ai_search_button_aria': 'Cari',
+    'ai_search_close_aria': 'Tutup hasil carian',
+    'ai_search_circle_search_aria': 'Carian Bulatan',
+    'ai_search_circle_search_title': 'Carian Bulatan AI Xiao Song',
+    'ai_search_circle_search_prompt': 'Bulatkan kandungan di skrin untuk mencari',
+
+    // Memory Hub App
+    'memory_hub_add': 'Tambah Memori',
+    'memory_hub_placeholder': 'Catat fikiran anda, pautan, atau muat naik imej...',
+    'memory_hub_categorizing': 'Mengklasifikasikan dengan AI...',
+    'memory_hub_all_memories': 'Semua Memori',
+    'memory_hub_collections': 'Koleksi Pintar',
+    'memory_hub_no_memories': 'Belum ada memori. Cuba tambah satu!',
+    'memory_hub_delete': 'Padam Memori',
+    'memory_hub_empty_state': 'Hab Memori anda kosong',
+    'memory_hub_empty_state_desc': 'Mula bina otak kedua anda dengan menggunakan input di bawah atau beritahu pembantu "Ingat bahawa...".',
+
+    // AI Recorder App
+    'ai_recorder_status_idle': 'Ketik untuk mula merakam',
+    'ai_recorder_status_recording': 'Merakam...',
+    'ai_recorder_status_stopped': 'Rakaman dihentikan.',
+    'ai_recorder_transcribe_button': 'Transkripsi & Analisis',
+    'ai_recorder_transcribing': 'Mentranksripsi...',
+    'ai_recorder_summary_button': 'Jana Ringkasan',
+    'ai_recorder_title_button': 'Jana Tajuk',
+    'ai_recorder_summary_prompt': 'Sila ringkaskan transkripsi audio berikut ke dalam format minit mesyuarat, termasuk perkara penting dan senarai tugasan',
+    'ai_recorder_summary_label': 'Ringkasan AI',
+    'ai_recorder_transcript_label': 'Transkrip',
+    'ai_recorder_results_placeholder': 'Hasil analisis rakaman akan muncul di sini.',
+    
   },
 };

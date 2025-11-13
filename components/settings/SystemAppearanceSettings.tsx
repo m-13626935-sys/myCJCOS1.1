@@ -1,6 +1,5 @@
-
 import React, { useState, useRef, useEffect } from 'react';
-import type { AppProps, Language, TimeFormat, ColorMode, GradientConfig, ButtonBackground } from '../../types';
+import type { AppProps, Language, TimeFormat, ColorMode, GradientConfig, ButtonBackground, ThemeColors } from '../../types';
 import { useLanguage } from '../../contexts/LanguageContext';
 
 const SectionHeader: React.FC<{ title: string, previewStyle?: React.CSSProperties }> = ({ title, previewStyle }) => (
@@ -64,8 +63,8 @@ const GradientPicker: React.FC<{
     );
 };
 
-
 const SystemAppearanceSettings: React.FC<Partial<AppProps>> = ({ 
+    launchApp,
     setWallpaper, 
     setTextColor,
     textColor = "#FFFFFF",
@@ -79,6 +78,9 @@ const SystemAppearanceSettings: React.FC<Partial<AppProps>> = ({
     colorMode = 'light',
     setSystemBackgroundGradient,
     systemBackgroundGradient = { from: '#1a237e', to: '#004d40', angle: 145 },
+    themeColors,
+    isAutoThemeEnabled,
+    setIsAutoThemeEnabled,
 }) => {
     const { t } = useLanguage();
     const [wallpaperUrl, setWallpaperUrl] = useState('');
@@ -108,7 +110,9 @@ const SystemAppearanceSettings: React.FC<Partial<AppProps>> = ({
     const systemPreviewStyle = (): React.CSSProperties => {
         switch(colorMode) {
             case 'light': return { background: '#e5e7eb' };
+            case 'adaptive': return { background: 'linear-gradient(90deg, #e5e7eb 50%, #111827 50%)' };
             case 'gradient': return { background: `linear-gradient(${systemBackgroundGradient.angle}deg, ${systemBackgroundGradient.from}, ${systemBackgroundGradient.to})` };
+            case 'theme': return themeColors ? { background: `linear-gradient(145deg, ${themeColors.gradientStart}, ${themeColors.gradientEnd})`, backgroundColor: themeColors.primaryBG } : { background: '#111827' };
             case 'dark':
             default:
                 return { background: '#111827' };
@@ -123,27 +127,69 @@ const SystemAppearanceSettings: React.FC<Partial<AppProps>> = ({
     
     const colorModeOptions: { id: ColorMode; name: string }[] = [
         { id: 'light', name: t('appearance_mode_light') },
+        { id: 'dark', name: 'Dark' }, // Assuming 'Dark' is universal enough
+        { id: 'adaptive', name: t('appearance_mode_adaptive') },
         { id: 'gradient', name: t('appearance_mode_gradient') },
+        { id: 'theme', name: t('appearance_mode_theme') },
     ];
     
     return (
         <div className="h-full flex flex-col text-outline overflow-y-auto pr-2 -mr-4 pb-4">
             <h2 className="text-2xl font-bold mb-6">{t('settings_appearance_category')}</h2>
 
+             <Section title={t('theme_automation_title')}>
+                <div className="flex items-center justify-between">
+                    <div>
+                        <h4 className="font-semibold">{t('theme_automation_label')}</h4>
+                        <p className="text-sm opacity-70 max-w-sm">{t('theme_automation_desc')}</p>
+                    </div>
+                    {isAutoThemeEnabled !== undefined && setIsAutoThemeEnabled && (
+                        <button
+                            role="switch"
+                            aria-checked={isAutoThemeEnabled}
+                            onClick={() => setIsAutoThemeEnabled(!isAutoThemeEnabled)}
+                            className={`relative inline-flex items-center h-6 rounded-full w-11 transition-colors ${isAutoThemeEnabled ? 'bg-blue-600' : 'bg-gray-600'}`}
+                        >
+                            <span
+                                className={`inline-block w-4 h-4 transform bg-white rounded-full transition-transform ${isAutoThemeEnabled ? 'translate-x-6' : 'translate-x-1'}`}
+                            />
+                        </button>
+                    )}
+                </div>
+            </Section>
+
             <Section title={t('appearance_color_mode')} previewStyle={systemPreviewStyle()}>
-                <div className="flex space-x-2 mb-4">
+                <div className="flex flex-wrap gap-2 mb-4">
                     {colorModeOptions.map(opt => (
                          <button
                             key={opt.id}
                             onClick={() => setColorMode?.(opt.id)}
-                            className={`flex-1 py-2 px-4 text-center rounded-xl transition-all border ${colorMode === opt.id ? 'bg-blue-500/80 border-transparent text-white' : 'bg-black/5 dark:bg-white/5 border-white/30 hover:bg-black/10 dark:hover:bg-white/10'}`}
+                            className={`flex-1 min-w-[120px] py-2 px-4 text-center rounded-xl transition-all border ${colorMode === opt.id ? 'bg-blue-500/80 border-transparent text-white' : 'bg-black/5 dark:bg-white/5 border-white/30 hover:bg-black/10 dark:hover:bg-white/10'}`}
                         >
                             {opt.name}
                         </button>
                     ))}
                 </div>
+                {colorMode === 'adaptive' && (
+                    <p className="text-sm p-3 bg-black/5 dark:bg-white/5 rounded-xl opacity-80">{t('appearance_mode_adaptive_desc')}</p>
+                )}
                 {colorMode === 'gradient' && systemBackgroundGradient && setSystemBackgroundGradient && (
                     <GradientPicker idPrefix="system" gradient={systemBackgroundGradient} onGradientChange={setSystemBackgroundGradient} />
+                )}
+                {colorMode === 'theme' && (
+                    <div className="p-3 bg-black/5 dark:bg-white/5 rounded-xl flex flex-col items-center">
+                        <div className="flex justify-center items-center gap-2 mb-3">
+                             {themeColors && Object.values(themeColors).slice(0, 5).map((color, i) => (
+                                <div key={i} className="w-6 h-6 rounded-full shadow-md ring-1 ring-black/20" style={{ backgroundColor: color }} />
+                             ))}
+                        </div>
+                        <button
+                            onClick={() => launchApp?.('image-studio')}
+                            className="w-full light-field-button py-2 text-base font-semibold"
+                        >
+                            {t('appearance_launch_theme_app')}
+                        </button>
+                    </div>
                 )}
             </Section>
 

@@ -1,13 +1,13 @@
 import React, { useState, useEffect } from 'react';
 import { geminiService } from '../services/geminiService';
-import type { DictionaryEntry } from '../types';
+import type { BilingualDictionaryEntry } from '../types';
 import { useLanguage } from '../contexts/LanguageContext';
 
 const STORAGE_KEY = 'chinese_dictionary_last_state';
 
 interface DictionaryState {
     query: string;
-    result: DictionaryEntry | null;
+    result: BilingualDictionaryEntry | null;
     easterEggMessage: string | null;
     error: string | null;
 }
@@ -33,7 +33,7 @@ const Section: React.FC<{ title: string; children: React.ReactNode }> = ({ title
 );
 
 const EASTER_EGG_MESSAGES: Record<string, string> = {
-    '郑家诚': 'CJC 操作系统作者郑家诚生日快乐！',
+    '郑家诚': 'Gemini AI 虚构 OS 作者郑家诚生日快乐！',
     '浦宜璇': '浦宜璇生日快乐！',
     '黄祖乐': '黄祖乐生日快乐！',
     '嘉胜': '嘉胜生日快乐！',
@@ -41,9 +41,8 @@ const EASTER_EGG_MESSAGES: Record<string, string> = {
     '吴昊泽': '吴昊泽生日快乐！',
     '凌珮淇': '凌珮淇生日快乐！',
     '苏家扬': '苏家扬生日快乐！',
-    '严富城': '严富城生日快乐！'
+    '严富城': '严富城生日快乐！',
 };
-
 
 const ChineseDictionaryApp: React.FC = () => {
     const { t } = useLanguage();
@@ -55,11 +54,11 @@ const ChineseDictionaryApp: React.FC = () => {
             return initialState;
         }
     });
-    
+
     const [isLoading, setIsLoading] = useState(false);
     const { query, result, easterEggMessage, error } = state;
 
-    useEffect(() => {
+     useEffect(() => {
         try {
             localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
         } catch (e) {
@@ -75,13 +74,12 @@ const ChineseDictionaryApp: React.FC = () => {
         setState(s => ({ ...s, error: null, result: null, easterEggMessage: null }));
 
         try {
-            const trimmedQuery = query.trim();
-            const message = EASTER_EGG_MESSAGES[trimmedQuery];
-
+            const normalizedQuery = query.trim().toLowerCase();
+            const message = EASTER_EGG_MESSAGES[normalizedQuery];
             if (message) {
                 setState(s => ({ ...s, easterEggMessage: message }));
             } else {
-                const data = await geminiService.getDictionaryEntry(trimmedQuery);
+                const data = await geminiService.getChineseDictionaryEntry(normalizedQuery);
                 setState(s => ({ ...s, result: data, easterEggMessage: null }));
             }
         } catch (err) {
@@ -92,16 +90,6 @@ const ChineseDictionaryApp: React.FC = () => {
             setIsLoading(false);
         }
     };
-
-    const emotionColorMap: Record<string, string> = {
-        '喜悦': 'bg-yellow-400',
-        '悲伤': 'bg-blue-500',
-        '愤怒': 'bg-red-500',
-        '惊讶': 'bg-purple-500',
-        '恐惧': 'bg-gray-600',
-        '中立': 'bg-green-500',
-        '爱': 'bg-pink-500',
-    }
 
     return (
         <div className="h-full flex flex-col bg-transparent text-outline">
@@ -135,9 +123,9 @@ const ChineseDictionaryApp: React.FC = () => {
                 
                 {!isLoading && !result && !error && !easterEggMessage && (
                     <div className="h-full flex flex-col items-center justify-center text-center text-outline opacity-70">
-                         <svg xmlns="http://www.w3.org/2000/svg" className="w-24 h-24 opacity-20" viewBox="0 0 24 24" fill="currentColor"><path d="M21.822 7.431A1 1 0 0 0 21 7H7.333L6.179 4.23A1.994 1.994 0 0 0 4.333 3H4a1 1 0 0 0-1 1v1h1.179l3 6.6A1.993 1.993 0 0 0 9 13h9a1 1 0 0 0 .931-.648l3-8a1 1 0 0 0-.109-.921zM9 14.5A1.5 1.5 0 1 1 7.5 16a1.5 1.5 0 0 1 1.5-1.5zm8.5 0a1.5 1.5 0 1 1-1.5 1.5a1.5 1.5 0 0 1 1.5-1.5zM12 1a1 1 0 0 0-1 1v10a1 1 0 0 0 2 0V2a1 1 0 0 0-1-1zm-5 4a1 1 0 0 0-1 1v5a1 1 0 0 0 2 0V6a1 1 0 0 0-1-1zm10 0a1 1 0 0 0-1 1v5a1 1 0 0 0 2 0V6a1 1 0 0 0-1-1z"/></svg>
-                        <h2 className="text-xl font-semibold mt-4">{t('dictionary_initial_title_chinese')}</h2>
-                        <p className="mt-1">{t('dictionary_initial_subtitle_chinese')}</p>
+                         <svg xmlns="http://www.w3.org/2000/svg" className="w-24 h-24 opacity-20" viewBox="0 0 24 24" fill="currentColor"><path d="M19.78 2.22a2.5 2.5 0 0 0-3.54 0L3.53 14.93a2.5 2.5 0 0 0 0 3.54l5.66 5.66a2.5 2.5 0 0 0 3.54 0L21.41 12.3a1 1 0 0 0 0-1.42L12.7 2.17a1 1 0 0 0-1.41 0L3.06 10.4a1 1 0 0 0 0 1.41L11.29 20a1 1 0 0 0 1.42 0l8.22-8.23a1 1 0 0 0 0-1.41L12.7 2.17" /></svg>
+                        <h2 className="text-xl font-semibold mt-4">{t('app_chinese_dictionary')}</h2>
+                        <p className="mt-1">{t('dictionary_initial_subtitle_bilingual')}</p>
                     </div>
                 )}
                 
@@ -150,7 +138,6 @@ const ChineseDictionaryApp: React.FC = () => {
                    </div>
                 )}
 
-                {/* 彩蛋显示区域 */}
                 {easterEggMessage && (
                     <div className="h-full flex flex-col items-center justify-center text-center">
                         <div className="bg-gradient-to-r from-pink-500/20 via-purple-500/20 to-blue-500/20 p-8 rounded-2xl backdrop-blur-md ring-1 ring-white/30 dark:ring-black/30 max-w-md w-full">
@@ -165,56 +152,47 @@ const ChineseDictionaryApp: React.FC = () => {
                     <div className="space-y-4">
                         <div className="text-center py-4">
                             <h1 className="text-5xl font-bold">{result.word}</h1>
-                            <p className="text-xl opacity-70 mt-2">{result.pronunciation}</p>
+                            <p className="text-xl opacity-70 mt-2 font-mono">{result.pronunciation}</p>
                         </div>
                         
-                        <Section title={t('dictionary_section_definition')}>
-                            <p className="text-base">{result.definition}</p>
+                        <Section title={'中文释义'}>
+                            <p className="text-base">{result.primaryDefinition}</p>
                         </Section>
 
-                        <Section title={t('dictionary_section_emotion')}>
-                            <div className="space-y-3">
-                                {result.emotionalSpectrum.map((item, index) => (
-                                    <div key={index}>
-                                        <div className="flex justify-between items-center mb-1 text-sm">
-                                            <span>{item.emotion}</span>
-                                            <span>{item.intensity}%</span>
-                                        </div>
-                                        <div className="w-full bg-black/10 dark:bg-white/10 rounded-full h-2">
-                                            <div
-                                                className={`h-2 rounded-full ${emotionColorMap[item.emotion] || 'bg-gray-400'}`}
-                                                style={{ width: `${item.intensity}%` }}
-                                            ></div>
-                                        </div>
-                                    </div>
-                                ))}
-                            </div>
+                        <Section title={'English Definition'}>
+                            <p className="text-base">{result.secondaryDefinition}</p>
                         </Section>
+
+                        {result.examples?.length > 0 && (
+                            <Section title={'例句 / Examples'}>
+                                 <div className="space-y-3">
+                                    {result.examples.map((item, index) => (
+                                        <div key={index} className="border-l-2 border-black/20 dark:border-white/20 pl-3">
+                                            <p className="text-base italic">"{item.original}"</p>
+                                            <p className="text-base italic text-outline/80">"{item.translation}"</p>
+                                        </div>
+                                    ))}
+                                </div>
+                            </Section>
+                        )}
                         
-                        <Section title={t('dictionary_section_examples')}>
-                             <div className="space-y-3">
-                                {result.contextualExamples.map((item, index) => (
-                                    <div key={index} className="border-l-2 border-black/20 dark:border-white/20 pl-3">
-                                        <p className="font-semibold text-sm">{item.context}</p>
-                                        <p className="text-base italic">"{item.example}"</p>
-                                    </div>
-                                ))}
-                            </div>
-                        </Section>
-
-                        <Section title={t('dictionary_section_etymology')}>
-                             <p className="text-base leading-relaxed">{result.etymology}</p>
-                        </Section>
-
-                         <Section title={t('dictionary_section_related')}>
-                            <div className="flex flex-wrap gap-2">
-                                {result.relatedWords.map((word, index) => (
-                                    <span key={index} className="bg-black/10 dark:bg-white/10 px-3 py-1 rounded-full text-sm">
-                                        {word}
-                                    </span>
-                                ))}
-                            </div>
-                        </Section>
+                        {result.etymology && (
+                            <Section title={t('dictionary_section_etymology')}>
+                                 <p className="text-base leading-relaxed">{result.etymology}</p>
+                            </Section>
+                        )}
+                        
+                        {result.relatedWords && result.relatedWords.length > 0 && (
+                             <Section title={'相关词语'}>
+                                <div className="flex flex-wrap gap-2">
+                                    {result.relatedWords.map((word, index) => (
+                                        <span key={index} className="bg-black/10 dark:bg-white/10 px-3 py-1 rounded-full text-sm">
+                                            {word}
+                                        </span>
+                                    ))}
+                                </div>
+                            </Section>
+                        )}
                     </div>
                 )}
             </main>

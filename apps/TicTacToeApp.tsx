@@ -1,11 +1,13 @@
 import React, { useState, useEffect } from 'react';
 import { useLanguage } from '../contexts/LanguageContext';
+import { useLightField } from '../hooks/useLightField';
 
 const TicTacToeApp: React.FC = () => {
   const { t } = useLanguage();
   const [board, setBoard] = useState<(string | null)[]>(Array(9).fill(null));
   const [xIsNext, setXIsNext] = useState(true);
   const [status, setStatus] = useState('');
+  const lightFieldRef = useLightField<HTMLDivElement>();
 
   const playerXEmoji = '❌';
   const playerOEmoji = '⭕';
@@ -58,7 +60,7 @@ const TicTacToeApp: React.FC = () => {
     const displayValue = value === 'X' ? playerXEmoji : value === 'O' ? playerOEmoji : '';
     return (
       <button
-        className="jelly-button w-full h-full text-5xl font-bold flex items-center justify-center text-outline"
+        className="light-field-button w-full h-full text-5xl font-bold flex items-center justify-center text-outline"
         onClick={() => handleClick(i)}
         aria-label={`Square ${i + 1}`}
       >
@@ -70,7 +72,10 @@ const TicTacToeApp: React.FC = () => {
   return (
     <div className="h-full flex flex-col items-center justify-center p-2 text-outline select-none">
       <div className="mb-4 text-xl font-semibold">{status}</div>
-      <div className="w-full max-w-[300px] aspect-square grid grid-cols-3 grid-rows-3 gap-2">
+      <div
+        ref={lightFieldRef}
+        className="w-full max-w-[300px] aspect-square grid grid-cols-3 grid-rows-3 gap-2 light-field-container rounded-2xl"
+      >
         {Array(9).fill(null).map((_, i) => (
             <div key={i}>{renderSquare(i)}</div>
         ))}

@@ -46,7 +46,7 @@ const DesktopClock: React.FC<DesktopClockProps> = ({ timeFormat }) => {
     : '';
 
   return (
-    <div className="absolute top-8 left-1/2 -translate-x-1/2 flex items-center justify-center text-outline pointer-events-none">
+    <div className="flex items-center justify-center text-outline pointer-events-none">
       {/* Time and Date Section */}
       <div className="text-center">
         <div className="text-6xl font-light flex items-baseline justify-center">

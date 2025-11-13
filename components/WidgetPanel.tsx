@@ -1,4 +1,3 @@
-
 import React, { useRef, useEffect } from 'react';
 import { WIDGETS } from '../constants';
 import { useLanguage } from '../contexts/LanguageContext';
@@ -39,7 +38,7 @@ const WidgetPanel: React.FC<WidgetPanelProps> = ({ isOpen, onClose, timeFormat }
     };
 
     return (
-        <div ref={panelRef} className={`fixed top-0 left-0 h-[calc(100%-56px)] w-80 max-w-[90vw] taskbar-background backdrop-blur-3xl ring-1 ring-black/10 dark:ring-white/10 shadow-2xl z-20 widget-panel ${isOpen ? 'open' : ''}`}>
+        <div ref={panelRef} className={`fixed top-0 left-0 h-[calc(100%-56px)] w-80 max-w-[90vw] taskbar-background backdrop-blur-3xl ring-1 ring-black/10 dark:ring-white/10 shadow-2xl z-40 widget-panel ${isOpen ? 'open' : ''}`}>
             <div className="p-4 border-b border-black/10 dark:border-white/10">
                 <h2 className="text-xl font-bold text-outline">{t('widgets_panel_title')}</h2>
                 <p className="text-sm opacity-70 text-outline">{t('widgets_panel_subtitle')}</p>

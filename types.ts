@@ -2,12 +2,24 @@ import React from 'react';
 
 export type Language = 'zh' | 'en' | 'ms';
 export type TimeFormat = '12h' | '24h';
-export type ColorMode = 'dark' | 'light' | 'gradient';
+export type ColorMode = 'dark' | 'light' | 'gradient' | 'theme' | 'adaptive';
 
 export interface GradientConfig {
   from: string; // hex color
   to: string;   // hex color
   angle: number;
+}
+
+export interface ThemeColors {
+  primaryBG: string;
+  highlightBG: string;
+  gradientStart: string;
+  gradientEnd: string;
+  borderColor: string;
+  shadowColor: string;
+  textOnBG: string;
+  textShadowOnBG: string;
+  accentShadow: string;
 }
 
 export type ButtonBackground = string | GradientConfig; // string is for "r, g, b"
@@ -38,12 +50,25 @@ export interface AppProps {
   colorMode?: ColorMode;
   setSystemBackgroundGradient?: (gradient: GradientConfig) => void;
   systemBackgroundGradient?: GradientConfig;
+  setThemeColors?: (colors: ThemeColors) => void;
+  themeColors?: ThemeColors | null;
   // Fix: Add missing properties for GlassButtonApp.tsx
   setButtonOpacity?: (opacity: number) => void;
   buttonOpacity?: number;
   // AI Settings props
   aiSettings?: AISettings;
   setAiSettings?: (settings: AISettings) => void;
+  // Dock settings
+  isAutoHideDockEnabled?: boolean;
+  setIsAutoHideDockEnabled?: (enabled: boolean) => void;
+  autoHideDuration?: number;
+  setAutoHideDuration?: (duration: number) => void;
+  // Inspirational Copy props
+  inspirationalCopy?: string | null;
+  setInspirationalCopy?: (copy: string) => void;
+  // Auto Theme props
+  isAutoThemeEnabled?: boolean;
+  setIsAutoThemeEnabled?: (enabled: boolean) => void;
 }
 
 export type AppCategory = string; // Changed to string to support translation keys
@@ -69,6 +94,9 @@ export interface WindowInstance {
   isMaximized: boolean;
   isMinimized: boolean;
   isClosing?: boolean;
+  isMinimizing?: boolean;
+  isRestoring?: boolean;
+  snapState?: { layout: string; area: string } | null;
   props?: Record<string, any>;
   previousState?: {
     position: { x: number; y: number };
@@ -93,6 +121,7 @@ export interface DesktopWidgetInstance {
 export interface ChatMessage {
     role: 'user' | 'model';
     text: string;
+    sources?: GroundingChunk[];
 }
 
 export interface GroundingChunk {
@@ -102,26 +131,20 @@ export interface GroundingChunk {
   };
 }
 
-export interface DictionaryEntry {
-  word: string;
-  pronunciation: string;
-  definition: string;
-  emotionalSpectrum: { emotion: string; intensity: number }[];
-  contextualExamples: { context: string; example: string }[];
-  etymology: string;
-  relatedWords: string[];
+export interface BilingualDictionaryEntry {
+    word: string;
+    language: 'zh' | 'en';
+    pronunciation: string; // Pinyin or IPA
+    primaryDefinition: string; // Definition in the original language
+    secondaryDefinition: string; // Definition in the other language
+    examples: {
+        original: string;
+        translation: string;
+    }[];
+    etymology: string;
+    relatedWords?: string[]; // Synonyms, antonyms etc.
 }
 
-export interface EnglishDictionaryEntry {
-  word: string;
-  ipa: string; // International Phonetic Alphabet
-  definition: string;
-  wordForms: string[];
-  exampleSentences: string[];
-  etymology: string;
-  synonyms: string[];
-  antonyms: string[];
-}
 
 export interface CalendarEvent {
   id: string;
@@ -163,3 +186,22 @@ export interface Presentation {
     width: number;
     height: number;
 }
+
+// --- MEMORY HUB TYPES ---
+export interface Memory {
+  id: string;
+  content: string;
+  type: 'text' | 'image' | 'link';
+  tags: string[];
+  createdAt: string; // ISO String
+  src?: string; // for image or link URL
+}
+
+// --- AI SEARCH TYPES ---
+export interface AiSearchResultText {
+  type: 'text';
+  text: string;
+  sources: GroundingChunk[];
+}
+
+export type AiSearchResult = AiSearchResultText;

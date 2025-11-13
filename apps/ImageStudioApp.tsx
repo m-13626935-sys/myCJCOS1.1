@@ -1,14 +1,41 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 import { geminiService } from '../services/geminiService';
-import type { AppProps } from '../types';
+import { extractPaletteFromImage, generateThemeFromPalette } from '../services/themeService';
+import type { AppProps, ThemeColors } from '../types';
 import { useLanguage } from '../contexts/LanguageContext';
 
-const ImageStudioApp: React.FC<Partial<AppProps>> = ({ setWallpaper }) => {
+const ImageStudioApp: React.FC<Partial<AppProps>> = ({ setWallpaper, setThemeColors, setInspirationalCopy, close }) => {
   const { t } = useLanguage();
   const [prompt, setPrompt] = useState('');
   const [isLoading, setIsLoading] = useState(false);
+  const [isGeneratingExtras, setIsGeneratingExtras] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [imageUrl, setImageUrl] = useState<string | null>(null);
+  const [palette, setPalette] = useState<[number, number, number][]>([]);
+  const [generatedTheme, setGeneratedTheme] = useState<ThemeColors | null>(null);
+  const [inspirationalCopy, setCopy] = useState<string | null>(null);
+
+  const loadingMessages = useMemo(() => [
+    t('image_studio_generating'),
+    t('image_studio_loading_1'),
+    t('image_studio_loading_2'),
+    t('image_studio_loading_3'),
+  ], [t]);
+  
+  const [loadingMessage, setLoadingMessage] = useState(loadingMessages[0]);
+
+  useEffect(() => {
+    if (isLoading) {
+      let i = 0;
+      setLoadingMessage(loadingMessages[0]); // Reset on start
+      const interval = setInterval(() => {
+        i = (i + 1) % loadingMessages.length;
+        setLoadingMessage(loadingMessages[i]);
+      }, 2500);
+      return () => clearInterval(interval);
+    }
+  }, [isLoading, loadingMessages]);
+
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -17,17 +44,43 @@ const ImageStudioApp: React.FC<Partial<AppProps>> = ({ setWallpaper }) => {
     setIsLoading(true);
     setError(null);
     setImageUrl(null);
+    setPalette([]);
+    setGeneratedTheme(null);
+    setCopy(null);
 
     try {
       const generatedUrl = await geminiService.generateImage(prompt);
       setImageUrl(generatedUrl);
+      setIsLoading(false); // Stop main loader, start secondary
+      
+      setIsGeneratingExtras(true);
+      const [extractedPalette, copy] = await Promise.all([
+          extractPaletteFromImage(generatedUrl),
+          geminiService.generateInspirationalCopy({ data: generatedUrl.split(',')[1], mimeType: 'image/jpeg' })
+      ]);
+
+      setPalette(extractedPalette);
+      setGeneratedTheme(generateThemeFromPalette(extractedPalette));
+      setCopy(copy);
+
     } catch (err) {
-      console.error('Image generation error:', err);
+      console.error('Image Studio error:', err);
       setError(err instanceof Error ? t(err.message) : t('error_unknown'));
-    } finally {
       setIsLoading(false);
+    } finally {
+      setIsGeneratingExtras(false);
     }
   };
+  
+  const handleApplyThemeAndWallpaper = () => {
+    if (imageUrl && generatedTheme && setWallpaper && setThemeColors && close && inspirationalCopy && setInspirationalCopy) {
+        setWallpaper(imageUrl);
+        setThemeColors(generatedTheme);
+        setInspirationalCopy(inspirationalCopy);
+        close();
+    }
+  };
+
 
   return (
     <div className="h-full flex flex-col text-outline">
@@ -54,8 +107,8 @@ const ImageStudioApp: React.FC<Partial<AppProps>> = ({ setWallpaper }) => {
         </button>
       </form>
       
-      <div className="flex-grow flex items-center justify-center bg-black/5 dark:bg-black/20 rounded-2xl p-2">
-        {isLoading && <div className="opacity-70">{t('image_studio_generating')}</div>}
+      <div className="flex-grow flex items-center justify-center bg-black/5 dark:bg-black/20 rounded-2xl p-2 mb-4">
+        {isLoading && <div className="opacity-70 transition-opacity duration-500 text-center">{loadingMessage}</div>}
         {error && <div className="text-outline p-4 text-center">{error}</div>}
         {imageUrl && !isLoading && (
             <div className="relative group w-full h-full">
@@ -65,16 +118,6 @@ const ImageStudioApp: React.FC<Partial<AppProps>> = ({ setWallpaper }) => {
                     className="w-full h-full object-contain rounded-xl"
                     draggable={false}
                 />
-                {setWallpaper && (
-                    <div className="absolute inset-0 bg-black/60 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300 rounded-xl">
-                        <button
-                            onClick={() => setWallpaper(imageUrl!)}
-                            className="px-4 py-2 text-outline font-semibold bg-black/40 rounded-xl border border-white/50 backdrop-blur-sm hover:bg-white/20 transition-all duration-200"
-                        >
-                            {t('image_studio_set_wallpaper')}
-                        </button>
-                    </div>
-                )}
             </div>
         )}
         {!isLoading && !error && !imageUrl && (
@@ -86,6 +129,39 @@ const ImageStudioApp: React.FC<Partial<AppProps>> = ({ setWallpaper }) => {
             </div>
         )}
       </div>
+
+       {!isLoading && (palette.length > 0 || inspirationalCopy) && (
+        <div className="flex-shrink-0 animate-fade-in">
+             <div className="space-y-3">
+                 {palette.length > 0 && (
+                    <div>
+                         <h2 className="text-lg font-semibold mb-2 text-center">{t('theme_studio_palette')}</h2>
+                         <div className="flex justify-center items-center gap-2 p-2 bg-black/5 dark:bg-black/20 rounded-xl">
+                             {palette.map((rgb, i) => (
+                                <div key={i} className="w-8 h-8 rounded-full shadow-md" style={{ backgroundColor: `rgb(${rgb[0]}, ${rgb[1]}, ${rgb[2]})` }} />
+                             ))}
+                         </div>
+                    </div>
+                 )}
+                {isGeneratingExtras ? (
+                     <div className="text-center text-sm opacity-70 animate-pulse">Generating theme...</div>
+                ) : inspirationalCopy && (
+                    <blockquote className="my-2 italic text-sm opacity-90 text-center">
+                        <p>"{inspirationalCopy}"</p>
+                    </blockquote>
+                )}
+             </div>
+             <div className="flex items-center gap-2 mt-3">
+                <button
+                    onClick={handleApplyThemeAndWallpaper}
+                    disabled={!generatedTheme || !inspirationalCopy}
+                    className="w-full light-field-button py-3 text-base font-semibold disabled:opacity-50"
+                >
+                    設为壁纸
+                </button>
+             </div>
+        </div>
+      )}
     </div>
   );
 };

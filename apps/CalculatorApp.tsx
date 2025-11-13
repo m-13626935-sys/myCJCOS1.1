@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useLanguage } from '../contexts/LanguageContext';
+import { useLightField } from '../hooks/useLightField';
 
 type Operator = '+' | '-' | '×' | '÷';
 
@@ -28,7 +29,7 @@ const CalculatorButton: React.FC<{
 }> = ({ onClick, value, className = '', label }) => (
   <button
     onClick={() => onClick(value)}
-    className={`jelly-button text-2xl font-medium rounded-full text-outline focus:outline-none focus:ring-2 focus:ring-gray-400 ${className}`}
+    className={`light-field-button text-2xl font-medium rounded-full text-outline focus:outline-none focus:ring-2 focus:ring-gray-400 ${className}`}
     aria-label={label || value}
   >
     {value}
@@ -45,6 +46,7 @@ const CalculatorApp: React.FC = () => {
       return initialState;
     }
   });
+  const lightFieldRef = useLightField<HTMLDivElement>();
 
   useEffect(() => {
     try {
@@ -166,7 +168,10 @@ const CalculatorApp: React.FC = () => {
             {displayValue}
         </span>
       </div>
-      <div className="grid grid-cols-4 grid-rows-5 gap-3 flex-shrink-0 h-[75%] p-1">
+      <div
+        ref={lightFieldRef}
+        className="grid grid-cols-4 grid-rows-5 gap-3 flex-shrink-0 h-[75%] p-1 light-field-container rounded-3xl"
+      >
         <CalculatorButton onClick={handleInput} value={clearButtonValue} label={clearButtonValue === 'AC' ? t('calculator_clear_all') : t('calculator_clear')} className="bg-gray-400/50 dark:bg-gray-400/80 !text-black" />
         <CalculatorButton onClick={handleInput} value="+/-" className="bg-gray-400/50 dark:bg-gray-400/80 !text-black" />
         <CalculatorButton onClick={handleInput} value="%" className="bg-gray-400/50 dark:bg-gray-400/80 !text-black" />

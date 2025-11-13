@@ -1,9 +1,8 @@
-import React, { useState, useEffect, useRef, useCallback } from 'react';
+import React, { useState, useEffect, useRef, useCallback, useMemo } from 'react';
 import { geminiService } from '../services/geminiService';
-import type { ChatMessage } from '../types';
+import type { ChatMessage, GroundingChunk } from '../types';
 import { useLanguage } from '../contexts/LanguageContext';
 
-// Fix: Make props optional to allow for default translated values and generic launch.
 interface GeminiChatAppProps {
   systemInstruction?: string;
   initialMessage?: string;
@@ -18,14 +17,11 @@ const GeminiChatApp: React.FC<GeminiChatAppProps> = ({
   sessionId: sessionIdProp,
 }) => {
   const { t } = useLanguage();
-
-  // Fix: Provide a stable, unique session ID if one isn't passed to ensure history is saved correctly.
+  
   const [internalSessionId] = useState(() => sessionIdProp || `generic-chat-${Date.now()}`);
   
-  // Fix: Use translated strings for default prop values instead of hardcoded Chinese.
-  const systemInstruction = systemInstructionProp ?? t('gemini_chat_default_sys');
+  const systemInstructionDefault = systemInstructionProp ?? t('gemini_chat_default_sys');
   const initialMessage = initialMessageProp ?? t('gemini_chat_default_init');
-  const placeholder = placeholderProp ?? t('gemini_chat_default_placeholder');
 
   const historyStorageKey = `chat_history_${internalSessionId}`;
 
@@ -35,7 +31,6 @@ const GeminiChatApp: React.FC<GeminiChatAppProps> = ({
     }
     try {
         const savedHistory = localStorage.getItem(historyStorageKey);
-        // Only restore if there's content, otherwise start fresh
         return savedHistory && JSON.parse(savedHistory).length > 0
             ? JSON.parse(savedHistory)
             : [{ role: 'model', text: initialMessage }];
@@ -48,6 +43,8 @@ const GeminiChatApp: React.FC<GeminiChatAppProps> = ({
   const [input, setInput] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const messagesEndRef = useRef<HTMLDivElement>(null);
+  
+  const placeholder = placeholderProp ?? t('gemini_chat_default_placeholder');
 
   const scrollToBottom = () => {
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
@@ -72,7 +69,7 @@ const GeminiChatApp: React.FC<GeminiChatAppProps> = ({
     if (!input.trim() || isLoading) return;
 
     const userMessage: ChatMessage = { role: 'user', text: input };
-    const currentHistory = [...history]; // Capture history before state updates
+    const currentHistory = [...history];
 
     setHistory(prev => [...prev, userMessage]);
     setInput('');
@@ -82,17 +79,28 @@ const GeminiChatApp: React.FC<GeminiChatAppProps> = ({
     setHistory(prev => [...prev, modelResponse]);
 
     try {
-      // Pass the history that includes the new user message, as our service is designed to handle it
-      const stream = await geminiService.streamChat(internalSessionId, input, [...currentHistory, userMessage], systemInstruction);
+      const stream = await geminiService.streamChat(internalSessionId, input, [...currentHistory, userMessage], systemInstructionDefault);
       
       let fullText = '';
+      let sources: GroundingChunk[] = [];
       for await (const chunk of stream) {
         fullText += chunk.text;
+        const chunkSources = chunk.candidates?.[0]?.groundingMetadata?.groundingChunks;
+        if (chunkSources && chunkSources.length > 0) {
+            sources = chunkSources;
+        }
+
         setHistory(prev => {
           const newHistory = [...prev];
-          const lastMessage = newHistory[newHistory.length - 1];
+          const lastMessageIndex = newHistory.length - 1;
+          const lastMessage = newHistory[lastMessageIndex];
+
           if (lastMessage && lastMessage.role === 'model') {
-            lastMessage.text = fullText;
+            newHistory[lastMessageIndex] = {
+              ...lastMessage,
+              text: fullText,
+              sources: sources,
+            };
           }
           return newHistory;
         });
@@ -103,7 +111,6 @@ const GeminiChatApp: React.FC<GeminiChatAppProps> = ({
         const newHistory = [...prev];
         const lastMessage = newHistory[newHistory.length - 1];
         if (lastMessage) {
-            // Fix: Use translated error message
             lastMessage.text = t('gemini_chat_error_message');
         }
         return newHistory;
@@ -111,21 +118,35 @@ const GeminiChatApp: React.FC<GeminiChatAppProps> = ({
     } finally {
       setIsLoading(false);
     }
-  }, [input, isLoading, history, internalSessionId, systemInstruction, t]);
+  }, [input, isLoading, history, internalSessionId, systemInstructionDefault, t]);
 
   return (
-    <div className="h-full flex flex-col bg-transparent text-outline">
-      <div className="flex-grow overflow-y-auto pr-4 -mr-4 space-y-4">
+    <div className="h-full flex flex-col bg-transparent text-outline -m-4">
+      <div className="flex-grow overflow-y-auto p-4 space-y-4">
         {history.map((msg, index) => (
           <div key={index} className={`flex ${msg.role === 'user' ? 'justify-end' : 'justify-start'}`}>
             <div 
               className={`max-w-xl px-4 py-2 rounded-xl ${msg.role === 'user' ? 'bg-black/25 dark:bg-blue-800/50 backdrop-blur-lg ring-1 ring-inset ring-white/30' : 'bg-white/20 dark:bg-black/10 backdrop-blur-lg ring-1 ring-black/5 dark:ring-white/10'}`}
             >
               <div className="prose prose-sm max-w-none whitespace-pre-wrap text-outline">{msg.text}</div>
+               {msg.sources && msg.sources.length > 0 && (
+                <div className="mt-2 pt-2 border-t border-gray-400/50 dark:border-gray-500/50">
+                    <h4 className="text-xs font-bold mb-1">{t('assistant_sources')}</h4>
+                    <ul className="list-disc list-inside space-y-1">
+                        {msg.sources.map((source, i) => source.web?.uri && (
+                            <li key={i} className="text-xs">
+                                <a href={source.web.uri} target="_blank" rel="noopener noreferrer" className="text-outline hover:underline break-all">
+                                    {source.web.title || source.web.uri}
+                                </a>
+                            </li>
+                        ))}
+                    </ul>
+                </div>
+              )}
             </div>
           </div>
         ))}
-        {isLoading && history[history.length-1]?.role === 'model' && (
+        {isLoading && history[history.length - 1]?.role === 'model' && (
             <div className="flex justify-start">
                  <div className="max-w-xl px-4 py-2 rounded-xl bg-white/20 dark:bg-black/10 backdrop-blur-lg ring-1 ring-black/5 dark:ring-white/10">
                     <div className="flex items-center space-x-2">
@@ -138,7 +159,7 @@ const GeminiChatApp: React.FC<GeminiChatAppProps> = ({
         )}
         <div ref={messagesEndRef} />
       </div>
-      <form onSubmit={handleSubmit} className="mt-4 flex items-center">
+      <form onSubmit={handleSubmit} className="m-4 flex items-center">
         <input
           type="text"
           value={input}

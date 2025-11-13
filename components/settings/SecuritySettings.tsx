@@ -1,8 +1,9 @@
 
+
 import React, { useState } from 'react';
 import { useLanguage } from '../../contexts/LanguageContext';
 
-const PASSWORD_STORAGE_KEY = 'cjc5_password';
+const PASSWORD_STORAGE_KEY = 'gemini_os_password';
 
 const SecuritySettings: React.FC = () => {
     const { t } = useLanguage();

@@ -70,7 +70,7 @@ interface AssistantPopupProps {
 }
 
 const STORAGE_KEY = 'assistant_app_history';
-const MEMORY_HUB_STORAGE_KEY = 'gemini_os_memory_hub_items';
+const MEMORY_HUB_STORAGE_KEY = 'cjc_memory_hub_items';
 
 const MicrophoneButton: React.FC<{ 
     isListening: boolean; 
@@ -162,6 +162,7 @@ const AssistantPopup: React.FC<AssistantPopupProps> = ({ onClose, aiSettings, se
         setError(null);
         try {
             if (fileAttachment) {
+                // FIX: Corrected the function name for multimodal content generation.
                 const { text } = await geminiService.analyzeImageAndText(query, fileAttachment);
                 setMessages(prev => [...prev, { by: 'assistant', text }]);
                 speak(text);

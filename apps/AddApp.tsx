@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { useLanguage } from '../contexts/LanguageContext';
 import type { AppDefinition } from '../types';
 
-const CUSTOM_APPS_STORAGE_KEY = 'cjc_custom_apps';
+const CUSTOM_APPS_STORAGE_KEY = 'gemini_os_custom_apps';
 
 const AddApp: React.FC = () => {
     const { t } = useLanguage();
@@ -121,7 +121,7 @@ const AddApp: React.FC = () => {
 
                 <div className="flex-shrink-0 w-40 flex flex-col items-center">
                     <p className="text-sm font-semibold mb-2">{t('add_app_preview')}</p>
-                    <div className="jelly-button flex-col w-28 h-24 p-1">
+                    <div className="light-field-button flex-col w-28 h-24 p-1">
                         {iconUrl ? (
                             <img src={iconUrl} alt="Icon Preview" className="w-12 h-12 object-contain mb-1" onError={(e) => { e.currentTarget.style.display = 'none'; e.currentTarget.nextElementSibling?.nextElementSibling?.classList.remove('hidden') }} onLoad={(e) => { e.currentTarget.style.display = 'block'; e.currentTarget.nextElementSibling?.nextElementSibling?.classList.add('hidden') }} />
                         ) : null}

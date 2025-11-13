@@ -1,10 +1,10 @@
 import React, { useMemo, useState, useRef, useEffect, useCallback } from 'react';
-import type { AppDefinition, AppCategory, WindowInstance, TimeFormat, CalendarEvent, AISettings } from '../types';
+import type { AppDefinition, WindowInstance, TimeFormat, CalendarEvent, AISettings } from '../types';
 import Clock from './Clock';
-import DockCategoryGroup from './DockCategoryGroup';
-import { CATEGORY_ORDER } from '../constants';
 import AssistantPopup from './AssistantPopup';
 import { useLanguage } from '../contexts/LanguageContext';
+import RunningAppIcon from './RunningAppIcon';
+import SnapGroupIcon from './SnapGroupIcon';
 
 // ---- TaskbarSchedule Component ----
 const SCHEDULE_STORAGE_KEY = 'schedule_app_events';
@@ -18,9 +18,6 @@ const getNextEvent = (): CalendarEvent | null => {
         const now = new Date();
         const today = new Date(now.getFullYear(), now.getMonth(), now.getDate());
 
-        // FIX: The original map created objects where `startTime` was a Date object,
-        // which mismatches the `CalendarEvent` type that expects a string.
-        // This version filters and sorts the original array without changing the type of its items.
         const upcomingEventsToday = events
             .filter(e => {
                 const eventDate = new Date(e.startTime);
@@ -41,7 +38,6 @@ const getNextEvent = (): CalendarEvent | null => {
 const TaskbarSchedule: React.FC<{ onAppClick: (appId: string) => void }> = ({ onAppClick }) => {
     const { t } = useLanguage();
     const [nextEvent, setNextEvent] = useState<CalendarEvent | null>(getNextEvent);
-    const intervalRef = useRef<number | null>(null);
 
     const updateSchedule = useCallback(() => {
         setNextEvent(getNextEvent());
@@ -58,12 +54,8 @@ const TaskbarSchedule: React.FC<{ onAppClick: (appId: string) => void }> = ({ on
     }, [updateSchedule]);
 
     useEffect(() => {
-        if (intervalRef.current) clearInterval(intervalRef.current);
-        // Set an interval to re-check for the next event, e.g., every minute
-        intervalRef.current = window.setInterval(updateSchedule, 60000);
-        return () => {
-            if (intervalRef.current) clearInterval(intervalRef.current);
-        };
+        const intervalId = window.setInterval(updateSchedule, 60000);
+        return () => clearInterval(intervalId);
     }, [updateSchedule]);
 
     if (!nextEvent) {
@@ -78,7 +70,7 @@ const TaskbarSchedule: React.FC<{ onAppClick: (appId: string) => void }> = ({ on
     return (
         <button
             onClick={() => onAppClick('schedule')}
-            className="jelly-button h-10 px-3 text-outline flex items-center space-x-2"
+            className="light-field-button h-10 px-3 text-outline flex items-center space-x-2"
             aria-label={`${t('schedule_taskbar_upcoming')}: ${nextEvent.title} at ${eventTime}`}
         >
             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" className="w-5 h-5">
@@ -130,7 +122,6 @@ const formatCountdown = (ms: number) => {
 
 const TaskbarTimer: React.FC<{ onAppClick: (appId: string) => void }> = ({ onAppClick }) => {
     const [timerState, setTimerState] = useState<TimerState | null>(getTimerState);
-    const intervalRef = React.useRef<number | null>(null);
     const { t } = useLanguage();
 
     const updateTimer = useCallback(() => {
@@ -148,12 +139,9 @@ const TaskbarTimer: React.FC<{ onAppClick: (appId: string) => void }> = ({ onApp
     }, [updateTimer]);
 
     useEffect(() => {
-        if (intervalRef.current) {
-            clearInterval(intervalRef.current);
-            intervalRef.current = null;
-        }
+        let intervalId: number | null = null;
         if (timerState?.isRunning) {
-            intervalRef.current = window.setInterval(() => {
+            intervalId = window.setInterval(() => {
                 const newTimeLeft = timerState.endTime - Date.now();
                 if (newTimeLeft > 0) {
                     setTimerState(s => s ? { ...s, timeLeft: newTimeLeft } : null);
@@ -163,9 +151,7 @@ const TaskbarTimer: React.FC<{ onAppClick: (appId: string) => void }> = ({ onApp
             }, 1000);
         }
         return () => {
-            if (intervalRef.current) {
-                clearInterval(intervalRef.current);
-            }
+            if (intervalId) clearInterval(intervalId);
         };
     }, [timerState?.isRunning, timerState?.endTime, updateTimer]);
     
@@ -179,7 +165,7 @@ const TaskbarTimer: React.FC<{ onAppClick: (appId: string) => void }> = ({ onApp
     return (
         <button
             onClick={() => onAppClick('clock')}
-            className="jelly-button h-10 px-3 text-outline flex items-center space-x-2"
+            className="light-field-button h-10 px-3 text-outline flex items-center space-x-2"
             aria-label={t('app_clock')}
         >
             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" className="w-5 h-5">
@@ -193,13 +179,17 @@ const TaskbarTimer: React.FC<{ onAppClick: (appId: string) => void }> = ({ onApp
 
 interface DockProps {
   apps: AppDefinition[];
+  windows: WindowInstance[];
   onAppClick: (appId: string) => void;
   onStartClick: () => void;
   onWidgetsClick: () => void;
-  windows: WindowInstance[];
   timeFormat: TimeFormat;
   isAiEnabled: boolean;
   aiSettings: AISettings;
+  isDockVisible: boolean;
+  focusedWindowId: string | null;
+  onFocusWindow: (id: string) => void;
+  onFocusWindows: (ids: string[]) => void;
 }
 
 const StartIcon = () => (
@@ -214,16 +204,18 @@ const WidgetsIcon = () => (
     </svg>
 );
 
-const AiIcon = () => (
-    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" className="w-5 h-5">
-        <path d="M19 9l1.25-2.75L23 5l-2.75-1.25L19 1l-1.25 2.75L15 5l2.75 1.25L19 9zm-7.5.5L9 4 6.5 9.5 1 12l5.5 2.5L9 20l2.5-5.5L14 12l-5.5-2.5zM19 15l-1.25 2.75L15 19l2.75 1.25L19 23l1.25-2.75L23 19l-2.75-1.25L19 15z" />
-    </svg>
+const AiIcon = ({ isLoading }: { isLoading: boolean }) => (
+    <div className="relative w-5 h-5">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" className={`w-full h-full transition-transform duration-500 ${isLoading ? 'animate-pulse animate-spin-slow' : ''}`}>
+            <path d="M19 9l1.25-2.75L23 5l-2.75-1.25L19 1l-1.25 2.75L15 5l2.75 1.25L19 9zm-7.5.5L9 4 6.5 9.5 1 12l5.5 2.5L9 20l2.5-5.5L14 12l-5.5-2.5zM19 15l-1.25 2.75L15 19l2.75 1.25L19 23l1.25-2.75L23 19l-2.75-1.25L19 15z" />
+        </svg>
+    </div>
 );
 
-const Dock: React.FC<DockProps> = ({ apps, onAppClick, onStartClick, onWidgetsClick, windows, timeFormat, isAiEnabled, aiSettings }) => {
+const Dock: React.FC<DockProps> = (props) => {
   const { t } = useLanguage();
-  const [openCategory, setOpenCategory] = useState<AppCategory | null>(null);
   const [isAssistantOpen, setIsAssistantOpen] = useState(false);
+  const [isAiLoading, setIsAiLoading] = useState(false);
   const assistantRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -238,31 +230,19 @@ const Dock: React.FC<DockProps> = ({ apps, onAppClick, onStartClick, onWidgetsCl
       document.removeEventListener('mousedown', handleClickOutside);
     };
   }, [isAssistantOpen]);
-
-  const categorizedApps = useMemo(() => {
-    return apps.reduce((acc, app) => {
-      if (app.category) {
-        if (!acc[app.category]) {
-          acc[app.category] = [];
-        }
-        acc[app.category].push(app);
-      }
-      return acc;
-    }, {} as Record<AppCategory, AppDefinition[]>);
-  }, [apps]);
-
-  const handleToggleCategory = (category: AppCategory) => {
-    setOpenCategory(prev => (prev === category ? null : category));
-  };
+  
+  const openWindows = useMemo(() => props.windows.filter(w => !w.isMinimized && !w.isClosing), [props.windows]);
+  const snappedGroup = useMemo(() => openWindows.filter(w => w.snapState), [openWindows]);
+  const regularWindows = useMemo(() => openWindows.filter(w => !w.snapState), [openWindows]);
 
   return (
-    <footer className="absolute bottom-4 left-1/2 -translate-x-1/2 h-16 z-30">
-       <div className="taskbar-background backdrop-blur-3xl ring-1 ring-black/10 dark:ring-white/10 shadow-2xl rounded-2xl flex items-center justify-between h-full px-3 space-x-2">
+    <footer className={`fixed bottom-4 left-1/2 -translate-x-1/2 h-16 z-50 transition-transform duration-300 ease-in-out ${props.isDockVisible ? 'translate-y-0' : 'translate-y-24'}`}>
+       <div className="taskbar-background backdrop-blur-3xl ring-1 ring-black/10 dark:ring-white/10 shadow-2xl rounded-3xl flex items-center justify-between h-full px-3 space-x-2">
             {/* Left Section */}
             <div className="flex items-center">
                  <button
-                    onClick={onWidgetsClick}
-                    className="jelly-button h-12 w-12 text-outline"
+                    onClick={props.onWidgetsClick}
+                    className="light-field-button h-12 w-12 text-outline"
                     aria-label={t('widgets_panel_title')}
                 >
                     <WidgetsIcon />
@@ -271,62 +251,62 @@ const Dock: React.FC<DockProps> = ({ apps, onAppClick, onStartClick, onWidgetsCl
             
             <div className="h-full flex-shrink-0 w-px bg-black/20 dark:bg-white/20"></div>
 
-            {/* Center Section */}
+            {/* Center Section - Running Apps */}
             <div className="flex items-center space-x-2">
                 <button
-                    onClick={() => {
-                      onStartClick();
-                      setOpenCategory(null);
-                    }}
-                    className="jelly-button h-12 w-12 text-outline"
+                    onClick={props.onStartClick}
+                    className="light-field-button h-12 w-12 text-outline"
                     aria-label={t('start_menu_aria')}
                 >
                   <StartIcon />
                 </button>
 
                 <div className="h-6 w-px bg-black/20 dark:bg-white/20"></div>
-
-                {CATEGORY_ORDER.map((category) => {
-                  const appsInCategory = categorizedApps[category] || [];
-                  if (appsInCategory.length === 0) return null;
-                  
-                  return (
-                    <DockCategoryGroup
-                      key={category}
-                      category={category}
-                      apps={appsInCategory}
-                      isOpen={openCategory === category}
-                      onToggle={() => handleToggleCategory(category)}
-                      onAppClick={onAppClick}
-                      onClose={() => setOpenCategory(null)}
-                      windows={windows}
-                    />
-                  );
+                
+                {regularWindows.map(win => {
+                    const app = props.apps.find(a => a.id === win.appId);
+                    if (!app) return null;
+                    return (
+                        <RunningAppIcon
+                            key={win.id}
+                            app={app}
+                            isFocused={win.id === props.focusedWindowId}
+                            onClick={() => props.onFocusWindow(win.id)}
+                        />
+                    );
                 })}
+
+                {snappedGroup.length > 0 && (
+                    <SnapGroupIcon
+                        group={snappedGroup}
+                        apps={props.apps}
+                        onFocusGroup={() => props.onFocusWindows(snappedGroup.map(w => w.id))}
+                    />
+                )}
             </div>
             
             <div className="h-full flex-shrink-0 w-px bg-black/20 dark:bg-white/20"></div>
 
             {/* Right Section */}
             <div className="flex items-center space-x-2">
-                <TaskbarSchedule onAppClick={onAppClick} />
-                <TaskbarTimer onAppClick={onAppClick} />
-                {isAiEnabled && (
+                <TaskbarSchedule onAppClick={props.onAppClick} />
+                <TaskbarTimer onAppClick={props.onAppClick} />
+                {props.isAiEnabled && (
                     <div className="relative" ref={assistantRef}>
                         <button
                             onClick={() => setIsAssistantOpen(prev => !prev)}
-                            className="jelly-button h-10 w-10 text-outline"
+                            className="light-field-button h-10 w-10 text-outline"
                             aria-label={t('assistant_aria')}
                             aria-haspopup="true"
                             aria-expanded={isAssistantOpen}
                         >
-                            <AiIcon />
+                            <AiIcon isLoading={isAiLoading} />
                         </button>
-                        {isAssistantOpen && <AssistantPopup onClose={() => setIsAssistantOpen(false)} aiSettings={aiSettings} />}
+                        {isAssistantOpen && <AssistantPopup onClose={() => setIsAssistantOpen(false)} aiSettings={props.aiSettings} setIsLoading={setIsAiLoading} />}
                     </div>
                 )}
                 <div className="h-6 w-px bg-black/20 dark:bg-white/20"></div>
-                <Clock timeFormat={timeFormat} />
+                <Clock timeFormat={props.timeFormat} />
             </div>
        </div>
     </footer>

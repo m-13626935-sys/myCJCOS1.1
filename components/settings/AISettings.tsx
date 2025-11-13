@@ -1,4 +1,3 @@
-
 import React from 'react';
 import type { AppProps, AISettings } from '../../types';
 import { useLanguage } from '../../contexts/LanguageContext';
@@ -73,9 +72,12 @@ const AISettings: React.FC<Partial<AppProps>> = ({ aiSettings, setAiSettings }) 
                         <h4 className="font-semibold">{t('settings_ai_integrations_title')}</h4>
                         <p className="text-sm opacity-70 mb-4">{t('settings_ai_integrations_desc')}</p>
                         <ul className="space-y-2 text-sm list-disc list-inside pl-2 opacity-90">
+                            <li>{t('settings_ai_integration_memory')}</li>
                             <li>{t('settings_ai_integration_schedule')}</li>
                             <li>{t('settings_ai_integration_clock')}</li>
                             <li>{t('settings_ai_integration_appearance')}</li>
+                            <li>{t('settings_ai_integration_chat')}</li>
+                            <li>{t('settings_ai_integration_recorder')}</li>
                         </ul>
                     </div>
                 </div>

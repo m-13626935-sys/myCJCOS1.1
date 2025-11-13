@@ -112,7 +112,7 @@ const StartMenu: React.FC<StartMenuProps> = ({ isOpen, apps, onAppClick, onResta
                         <button
                             key={app.id}
                             onClick={() => onAppClick(app.id)}
-                            className="relative flex flex-col items-center justify-center text-center p-1 rounded-xl bg-gradient-to-b from-white/5 to-white/0 ring-1 ring-inset ring-white/10 dark:ring-white/5 shadow-md hover:from-white/20 dark:hover:from-white/10 hover:shadow-lg active:shadow-inner active:scale-95 transition-all duration-200 group h-20"
+                            className={`relative flex flex-col items-center justify-center text-center p-1 rounded-2xl bg-gradient-to-b from-white/5 to-white/0 ring-1 ring-inset ring-white/10 dark:ring-white/5 shadow-md hover:from-white/20 dark:hover:from-white/10 hover:shadow-lg active:shadow-inner active:scale-95 transition-all duration-200 group h-20 ${app.isAiFeature ? 'ai-gradient-border' : ''}`}
                             aria-label={appName}
                         >
                             {app.icon && <img src={app.icon} alt="" className="w-8 h-8 object-contain mb-1" />}
@@ -152,7 +152,7 @@ const StartMenu: React.FC<StartMenuProps> = ({ isOpen, apps, onAppClick, onResta
                                         <button
                                             key={app.id}
                                             onClick={() => onAppClick(app.id)}
-                                            className="relative flex items-center text-left p-2 rounded-xl bg-white/[.02] dark:bg-black/5 ring-1 ring-inset ring-black/5 dark:ring-white/5 shadow-sm hover:bg-white/5 dark:hover:bg-white/10 hover:shadow-md active:shadow-inner active:scale-95 transition-all duration-200"
+                                            className={`relative flex items-center text-left p-2 rounded-2xl bg-white/[.02] dark:bg-black/5 ring-1 ring-inset ring-black/5 dark:ring-white/5 shadow-sm hover:bg-white/5 dark:hover:bg-white/10 hover:shadow-md active:shadow-inner active:scale-95 transition-all duration-200 ${app.isAiFeature ? 'ai-gradient-border' : ''}`}
                                             aria-label={appName}
                                         >
                                             {app.icon ? (
@@ -180,7 +180,7 @@ const StartMenu: React.FC<StartMenuProps> = ({ isOpen, apps, onAppClick, onResta
         <div
             ref={menuRef}
             onAnimationEnd={handleAnimationEnd}
-            className={`absolute bottom-16 left-1/2 w-[560px] max-w-[95vw] h-[640px] max-h-[80vh] taskbar-background backdrop-blur-3xl ring-1 ring-black/10 dark:ring-white/10 rounded-2xl shadow-2xl flex flex-col z-40 ${isOpen ? 'animate-fade-in-up' : 'animate-fade-out-down'}`}
+            className={`absolute bottom-16 left-1/2 w-[560px] max-w-[95vw] h-[640px] max-h-[80vh] taskbar-background backdrop-blur-3xl ring-1 ring-black/10 dark:ring-white/10 rounded-3xl shadow-2xl flex flex-col z-40 ${isOpen ? 'animate-start-menu-enter' : 'animate-start-menu-exit'}`}
         >
             <div className="p-4 flex-shrink-0">
                  <input
@@ -209,8 +209,8 @@ const StartMenu: React.FC<StartMenuProps> = ({ isOpen, apps, onAppClick, onResta
                 {showAllApps ? renderAppList(categorizedApps) : renderAppGrid(pinnedApps)}
             </div>
 
-            <div className="mt-auto bg-white/[.02] dark:bg-black/5 rounded-b-2xl px-6 py-3 flex justify-between items-center flex-shrink-0 text-outline">
-                 <button className="flex items-center space-x-2 p-2 rounded-xl bg-gradient-to-b from-white/5 to-white/0 dark:from-white/10 dark:to-white/0 ring-1 ring-inset ring-white/10 dark:ring-white/5 shadow-md hover:from-white/20 dark:hover:from-white/10 hover:shadow-lg active:shadow-inner active:scale-95 transition-all duration-200">
+            <div className="mt-auto bg-white/[.02] dark:bg-black/5 rounded-b-3xl px-6 py-3 flex justify-between items-center flex-shrink-0 text-outline">
+                 <button className="flex items-center space-x-2 p-2 rounded-2xl bg-gradient-to-b from-white/5 to-white/0 dark:from-white/10 dark:to-white/0 ring-1 ring-inset ring-white/10 dark:ring-white/5 shadow-md hover:from-white/20 dark:hover:from-white/10 hover:shadow-lg active:shadow-inner active:scale-95 transition-all duration-200">
                     <div className="text-outline">
                         <UserIcon />
                     </div>

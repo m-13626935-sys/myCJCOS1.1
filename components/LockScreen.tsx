@@ -1,19 +1,21 @@
-
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { useLanguage } from '../contexts/LanguageContext';
+import { useLightField } from '../hooks/useLightField';
 
 interface LockScreenProps {
   onUnlockSuccess: () => void;
   wallpaperUrl: string;
   userName: string;
+  inspirationalCopy?: string | null;
 }
 
-const LockScreen: React.FC<LockScreenProps> = ({ onUnlockSuccess, wallpaperUrl, userName }) => {
+const LockScreen: React.FC<LockScreenProps> = ({ onUnlockSuccess, wallpaperUrl, userName, inspirationalCopy }) => {
   const { t } = useLanguage();
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
   const [date, setDate] = useState(new Date());
   const [isUnlocking, setIsUnlocking] = useState(false);
+  const lightFieldRef = useLightField<HTMLDivElement>();
 
   useEffect(() => {
     const timerId = setInterval(() => setDate(new Date()), 1000);
@@ -21,7 +23,7 @@ const LockScreen: React.FC<LockScreenProps> = ({ onUnlockSuccess, wallpaperUrl, 
   }, []);
 
   const handleUnlock = () => {
-    const savedPassword = localStorage.getItem('cjc5_password') || '1234';
+    const savedPassword = localStorage.getItem('gemini_os_password') || '1234';
     if (password === savedPassword) {
       setIsUnlocking(true);
       setTimeout(() => {
@@ -64,7 +66,10 @@ const LockScreen: React.FC<LockScreenProps> = ({ onUnlockSuccess, wallpaperUrl, 
     >
       <div className="absolute inset-0 bg-black/50 backdrop-blur-xl z-0"></div>
       
-      <div className="z-10 flex flex-col items-center justify-center text-outline px-6 w-full max-w-md">
+      <div 
+        ref={lightFieldRef}
+        className="z-10 flex flex-col items-center justify-center text-outline px-6 w-full max-w-md light-field-container rounded-3xl"
+      >
         <div className="text-center mb-10">
           <div className="text-7xl font-light tracking-wide mb-2">
             {formatTime()}
@@ -109,6 +114,12 @@ const LockScreen: React.FC<LockScreenProps> = ({ onUnlockSuccess, wallpaperUrl, 
             {t('lockscreen_unlock')}
           </button>
         </div>
+        
+        {inspirationalCopy && (
+            <blockquote className="mt-8 text-lg opacity-90 text-center max-w-xs italic animate-fade-in">
+              <p>"{inspirationalCopy}"</p>
+            </blockquote>
+        )}
         
         <p className="mt-8 text-sm opacity-70 text-center max-w-xs">
           {t('lockscreen_password_hint')}

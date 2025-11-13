@@ -20,7 +20,7 @@ const MinimizedIcon: React.FC<{
     return (
         <button
             onClick={() => onRestore(window.id)}
-            className="jelly-button w-12 h-12 p-1"
+            className="light-field-button w-12 h-12 p-1"
             title={windowTitle}
             aria-label={`Restore ${windowTitle}`}
         >
@@ -43,7 +43,7 @@ const MinimizedTaskbar: React.FC<MinimizedTaskbarProps> = ({ windows, apps, onRe
   // Animate the entrance of the bar itself. Icons will just appear with it.
   return (
     <div 
-        className="fixed top-1/2 right-4 z-20 transition-all duration-300 animate-fade-in-right"
+        className="fixed top-1/2 right-4 z-40 transition-all duration-300 animate-fade-in-right"
         style={{ transform: 'translateY(-50%)' }}
         aria-label="Minimized applications"
         role="toolbar"

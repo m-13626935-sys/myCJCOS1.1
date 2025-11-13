@@ -1,4 +1,5 @@
 
+
 import React from 'react';
 import type { AppDefinition } from '../types';
 import { useLanguage } from '../contexts/LanguageContext';
@@ -15,7 +16,7 @@ const DockIcon: React.FC<DockIconProps> = ({ app, onClick }) => {
   return (
     <button
       onClick={onClick}
-      className="jelly-button h-12 px-4"
+      className="light-field-button h-12 px-4"
       aria-label={`${t('aria_open')} ${appName}`}
     >
       <span className="text-xs text-gray-800 dark:text-gray-200 whitespace-nowrap dark:drop-shadow-[0_1px_1px_rgba(0,0,0,0.5)]">{appName}</span>

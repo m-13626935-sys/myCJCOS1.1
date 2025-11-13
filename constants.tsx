@@ -4,16 +4,15 @@ import GeminiChatApp from './apps/GeminiChatApp';
 import ImageStudioApp from './apps/ImageStudioApp';
 import ClockApp from './components/StopwatchApp';
 import DigitalHumanSelectorApp from './apps/DigitalHumanSelectorApp';
-import AboutApp from './apps/AboutApp';
 import CalculatorApp from './apps/CalculatorApp';
 import SettingsApp from './apps/SettingsApp';
-import BlackboardApp from './apps/BlackboardApp';
 import ScheduleApp from './apps/ScheduleApp';
 import SlidesApp from './apps/SlidesApp';
 import AddApp from './apps/AddApp';
 import TicTacToeApp from './apps/TicTacToeApp';
 import ChineseDictionaryApp from './apps/ChineseDictionaryApp';
 import EnglishDictionaryApp from './apps/EnglishDictionaryApp';
+import AboutApp from './apps/AboutApp';
 import {
   ScheduleWidget,
   CalculatorWidget,
@@ -72,13 +71,12 @@ export const APPS: AppDefinition[] = [
   },
 
   // Education
-   {
+  {
     id: 'chinese-dictionary',
     name: 'app_chinese_dictionary',
     component: ChineseDictionaryApp,
     category: 'category_education',
     defaultSize: { width: 600, height: 750 },
-    isAiFeature: true,
   },
   {
     id: 'english-dictionary',
@@ -86,23 +84,15 @@ export const APPS: AppDefinition[] = [
     component: EnglishDictionaryApp,
     category: 'category_education',
     defaultSize: { width: 600, height: 750 },
-    isAiFeature: true,
   },
 
   // Tools
-  {
-    id: 'blackboard',
-    name: 'app_blackboard',
-    component: BlackboardApp,
-    category: 'category_tools',
-    defaultSize: { width: 800, height: 600 },
-  },
   {
     id: 'about',
     name: 'app_about',
     component: AboutApp,
     category: 'category_tools',
-    defaultSize: { width: 480, height: 520 },
+    defaultSize: { width: 500, height: 450 },
   },
   {
     id: 'calculator',

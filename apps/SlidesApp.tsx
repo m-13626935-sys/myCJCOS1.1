@@ -26,7 +26,7 @@ const defaultSlide: Slide = {
 };
 
 const ToolbarButton: React.FC<{ onClick: () => void; label: string; children: React.ReactNode }> = ({ onClick, label, children }) => (
-    <button onClick={onClick} className="jelly-button flex-col w-20 h-20 p-2 text-xs text-outline" title={label}>
+    <button onClick={onClick} className="light-field-button flex-col w-20 h-20 p-2 text-xs text-outline" title={label}>
         {children}
         <span className="mt-1">{label}</span>
     </button>
@@ -406,7 +406,7 @@ const SlidesApp: React.FC<Partial<AppProps>> = ({ close }) => {
                          {aiCoachTip && <p className="text-center bg-blue-500/30 p-2 rounded-md"><strong>{t('slides_rehearse_coach_tip')}:</strong> {aiCoachTip}</p>}
                          <button
                             onClick={isRecording ? stopRecording : startRecording}
-                            className="jelly-button px-6 py-3 text-base disabled:opacity-50 disabled:cursor-not-allowed"
+                            className="light-field-button px-6 py-3 text-base disabled:opacity-50 disabled:cursor-not-allowed"
                             disabled={micCheck !== 'found'}
                          >
                              {isRecording ? t('slides_rehearse_stop') : t('slides_rehearse_start')}
@@ -415,9 +415,9 @@ const SlidesApp: React.FC<Partial<AppProps>> = ({ close }) => {
                     </div>
                 )}
                  <div className="absolute bottom-4 right-4 flex gap-2">
-                     <button onClick={() => setCurrentSlideIndex(i => Math.max(0, i - 1))} className="jelly-button w-12 h-12 text-sm">Prev</button>
-                     <button onClick={() => setCurrentSlideIndex(i => Math.min(presentation.slides.length - 1, i + 1))} className="jelly-button w-12 h-12 text-sm">{t('slides_rehearse_next_slide')}</button>
-                     <button onClick={() => setMode('edit')} className="jelly-button px-4 h-12 text-sm">{t('slides_rehearse_exit')}</button>
+                     <button onClick={() => setCurrentSlideIndex(i => Math.max(0, i - 1))} className="light-field-button w-12 h-12 text-sm">Prev</button>
+                     <button onClick={() => setCurrentSlideIndex(i => Math.min(presentation.slides.length - 1, i + 1))} className="light-field-button w-12 h-12 text-sm">{t('slides_rehearse_next_slide')}</button>
+                     <button onClick={() => setMode('edit')} className="light-field-button px-4 h-12 text-sm">{t('slides_rehearse_exit')}</button>
                 </div>
              </div>
         )
@@ -587,7 +587,7 @@ const SlidesApp: React.FC<Partial<AppProps>> = ({ close }) => {
                                         <button
                                             onClick={handleTranslate}
                                             disabled={isTranslating}
-                                            className="w-full jelly-button px-4 py-2 text-sm disabled:opacity-50 disabled:cursor-not-allowed"
+                                            className="w-full light-field-button px-4 py-2 text-sm disabled:opacity-50 disabled:cursor-not-allowed"
                                         >
                                             {isTranslating ? `${t('slides_translating')}...` : t('slides_translate_button')}
                                         </button>
@@ -669,7 +669,7 @@ const AIAssistantPanel: React.FC<{
     
     return (
         <div className="absolute inset-0 bg-black/60 backdrop-blur-md z-30 flex items-center justify-center animate-window-enter" onClick={onClose}>
-            <div className="bg-gray-800/80 p-6 rounded-xl shadow-2xl w-full max-w-2xl ring-1 ring-white/20 text-white flex flex-col max-h-[80vh]" onClick={e => e.stopPropagation()}>
+            <div className="bg-gray-800/80 p-6 rounded-xl shadow-2xl w-full max-w-2xl ring-1 ring-white/20 text-white flex flex-col max-h-[80vh] ai-gradient-border" onClick={e => e.stopPropagation()}>
                 <h2 className="text-2xl font-bold mb-6 text-center">{t('slides_ai_panel_title')}</h2>
                 <div className="flex-grow overflow-y-auto space-y-6 pr-4 -mr-4">
                     {/* Generate Draft */}
@@ -678,7 +678,7 @@ const AIAssistantPanel: React.FC<{
                         <p className="text-sm opacity-70 mb-3">{t('slides_ai_generate_draft_desc')}</p>
                         <form onSubmit={handleSubmitDraft} className="flex gap-2">
                             <input type="text" value={draftPrompt} onChange={e => setDraftPrompt(e.target.value)} placeholder={t('slides_ai_draft_prompt_placeholder')} className="flex-grow p-2 rounded-md bg-white/10 text-outline placeholder-outline border-0 focus:outline-none focus:ring-2 ring-white/20" />
-                            <button type="submit" disabled={!draftPrompt.trim() || !!isLoading} className="jelly-button px-4 py-2 text-sm disabled:opacity-50">
+                            <button type="submit" disabled={!draftPrompt.trim() || !!isLoading} className="light-field-button px-4 py-2 text-sm disabled:opacity-50">
                                {isLoading === 'draft' ? '...' : t('slides_ai_prompt_button')}
                             </button>
                         </form>
@@ -689,7 +689,7 @@ const AIAssistantPanel: React.FC<{
                         <p className="text-sm opacity-70 mb-3">{t('slides_ai_generate_image_desc')}</p>
                         <form onSubmit={handleSubmitImage} className="flex gap-2">
                             <input type="text" value={imagePrompt} onChange={e => setImagePrompt(e.target.value)} placeholder={t('slides_ai_image_prompt_placeholder')} className="flex-grow p-2 rounded-md bg-white/10 text-outline placeholder-outline border-0 focus:outline-none focus:ring-2 ring-white/20" />
-                             <button type="submit" disabled={!imagePrompt.trim() || !!isLoading} className="jelly-button px-4 py-2 text-sm disabled:opacity-50">
+                             <button type="submit" disabled={!imagePrompt.trim() || !!isLoading} className="light-field-button px-4 py-2 text-sm disabled:opacity-50">
                                {isLoading === 'image' ? '...' : t('slides_ai_prompt_button')}
                             </button>
                         </form>
@@ -698,7 +698,7 @@ const AIAssistantPanel: React.FC<{
                     <div className="bg-black/20 p-4 rounded-lg">
                         <h3 className="font-semibold">{t('slides_ai_summarize')}</h3>
                         <p className="text-sm opacity-70 mb-3">{t('slides_ai_summarize_desc')}</p>
-                        <button onClick={handleGetSummary} disabled={!!isLoading} className="jelly-button w-full px-4 py-2 text-sm disabled:opacity-50">
+                        <button onClick={handleGetSummary} disabled={!!isLoading} className="light-field-button w-full px-4 py-2 text-sm disabled:opacity-50">
                             {isLoading === 'summary' ? t('slides_ai_summarizing') : t('slides_ai_summary_button')}
                         </button>
                         {summary && (

@@ -1,8 +1,7 @@
 import { useState, useCallback, useEffect } from 'react';
 import type { WindowInstance, AppDefinition } from '../types';
 
-const Z_INDEX_BASE = 10;
-const DOCK_HEIGHT = 56; // Corresponds to h-14 in Tailwind CSS
+const Z_INDEX_BASE = 30;
 
 export function useWindows(apps: AppDefinition[], t: (key: string) => string) {
   const [windows, setWindows] = useState<WindowInstance[]>([]);
@@ -36,6 +35,7 @@ export function useWindows(apps: AppDefinition[], t: (key: string) => string) {
         isMinimized: false,
         isClosing: false,
         props: options?.props,
+        snapState: null,
       };
 
       return [...prevWindows, newWindow];
@@ -58,10 +58,45 @@ export function useWindows(apps: AppDefinition[], t: (key: string) => string) {
       return prev.map(w => (w.id === id ? { ...w, zIndex: maxZ + 1 } : w));
     });
   }, []);
+  
+  const focusWindows = useCallback((windowIds: string[]) => {
+    setWindows(prev => {
+        if (windowIds.length === 0) return prev;
+        const maxZ = Math.max(...prev.map(w => w.zIndex), Z_INDEX_BASE);
+        
+        const windowMap = new Map(prev.map(w => [w.id, w]));
+
+        const windowsToFocus = windowIds
+            .map(id => windowMap.get(id))
+            .filter((w): w is WindowInstance => !!w)
+            .sort((a, b) => a.zIndex - b.zIndex);
+
+        let currentZ = maxZ + 1;
+        const updatedWindows = new Map<string, WindowInstance>();
+
+        for (const win of windowsToFocus) {
+            updatedWindows.set(win.id, {
+                ...win,
+                isMinimized: false,
+                isRestoring: win.isMinimized ? true : win.isRestoring,
+                zIndex: currentZ++,
+            });
+        }
+        
+        return prev.map(w => updatedWindows.get(w.id) || w);
+    });
+  }, []);
+
 
   const minimizeWindow = useCallback((id: string) => {
     setWindows(prev =>
-        prev.map(w => (w.id === id ? { ...w, isMinimized: true } : w))
+        prev.map(w => (w.id === id ? { ...w, isMinimizing: true, isMinimized: false } : w))
+    );
+  }, []);
+
+  const finishMinimize = useCallback((id: string) => {
+    setWindows(prev =>
+        prev.map(w => (w.id === id ? { ...w, isMinimized: true, isMinimizing: false } : w))
     );
   }, []);
 
@@ -69,9 +104,15 @@ export function useWindows(apps: AppDefinition[], t: (key: string) => string) {
     setWindows(prev => {
         const maxZ = Math.max(...prev.map(w => w.zIndex), Z_INDEX_BASE);
         return prev.map(w =>
-            w.id === id ? { ...w, isMinimized: false, zIndex: maxZ + 1 } : w
+            w.id === id ? { ...w, isMinimized: false, isRestoring: true, zIndex: maxZ + 1 } : w
         );
     });
+  }, []);
+
+  const finishRestore = useCallback((id: string) => {
+    setWindows(prev =>
+        prev.map(w => (w.id === id ? { ...w, isRestoring: false } : w))
+    );
   }, []);
 
   const toggleMaximizeWindow = useCallback((id: string) => {
@@ -83,6 +124,7 @@ export function useWindows(apps: AppDefinition[], t: (key: string) => string) {
             return {
               ...w,
               isMaximized: false,
+              snapState: null,
               position: w.previousState?.position || { x: 100, y: 100 },
               size: w.previousState?.size || { width: 640, height: 480 },
               previousState: undefined,
@@ -92,15 +134,84 @@ export function useWindows(apps: AppDefinition[], t: (key: string) => string) {
             return {
               ...w,
               isMaximized: true,
+              snapState: null,
               previousState: { position: w.position, size: w.size },
               position: { x: 0, y: 0 },
-              size: { width: window.innerWidth, height: window.innerHeight - DOCK_HEIGHT },
+              size: { width: window.innerWidth, height: window.innerHeight },
             };
           }
         }
         return w;
       })
     );
+  }, []);
+
+  const snapWindowToLayout = useCallback((id: string, layout: string, area: string) => {
+    setWindows(prev => prev.map(w => {
+        if (w.id === id) {
+            const previousState = w.isMaximized || w.snapState ? w.previousState : { position: w.position, size: w.size };
+            let newPos = { x: 0, y: 0 };
+            let newSize = { width: window.innerWidth, height: window.innerHeight };
+
+            switch (layout) {
+                case '50-50-horizontal':
+                    newSize.width /= 2;
+                    if (area === 'right') newPos.x = window.innerWidth / 2;
+                    break;
+                case 'main-side-right':
+                    if (area === 'main') {
+                        newSize.width *= 2 / 3;
+                    } else { // 'side'
+                        newSize.width /= 3;
+                        newPos.x = window.innerWidth * 2 / 3;
+                    }
+                    break;
+                case 'thirds-vertical':
+                    newSize.width /= 3;
+                    if (area === 'middle') newPos.x = window.innerWidth / 3;
+                    if (area === 'right') newPos.x = (window.innerWidth / 3) * 2;
+                    break;
+                case 'quadrants':
+                    newSize.width /= 2;
+                    newSize.height /= 2;
+                    if (area.includes('right')) newPos.x = window.innerWidth / 2;
+                    if (area.includes('bottom')) newPos.y = window.innerHeight / 2;
+                    break;
+            }
+
+            return {
+                ...w,
+                isMaximized: false,
+                snapState: { layout, area },
+                previousState,
+                position: newPos,
+                size: newSize,
+            };
+        }
+        return w;
+    }));
+  }, []);
+
+  const snapWindow = useCallback((id: string, side: 'left' | 'right') => {
+    snapWindowToLayout(id, '50-50-horizontal', side);
+  }, [snapWindowToLayout]);
+
+  const unsnapWindow = useCallback((id: string) => {
+    setWindows(prev => prev.map(w => {
+        if (w.id === id) {
+            if (w.snapState && w.previousState) {
+                return {
+                    ...w,
+                    isMaximized: false,
+                    snapState: null,
+                    position: w.previousState.position,
+                    size: w.previousState.size,
+                    previousState: undefined,
+                };
+            }
+        }
+        return w;
+    }));
   }, []);
 
   const updateWindowState = useCallback((id: string, updates: Partial<WindowInstance>) => {
@@ -125,9 +236,41 @@ export function useWindows(apps: AppDefinition[], t: (key: string) => string) {
               ...w,
               size: {
                 width: window.innerWidth,
-                height: window.innerHeight - DOCK_HEIGHT,
+                height: window.innerHeight,
               },
             };
+          }
+          if (w.snapState) {
+            const { layout, area } = w.snapState;
+            let newPos = { x: 0, y: 0 };
+            let newSize = { width: window.innerWidth, height: window.innerHeight };
+
+            switch (layout) {
+                case '50-50-horizontal':
+                    newSize.width /= 2;
+                    if (area === 'right') newPos.x = window.innerWidth / 2;
+                    break;
+                case 'main-side-right':
+                    if (area === 'main') {
+                        newSize.width = window.innerWidth * 2 / 3;
+                    } else { // 'side'
+                        newSize.width = window.innerWidth / 3;
+                        newPos.x = window.innerWidth * 2 / 3;
+                    }
+                    break;
+                case 'thirds-vertical':
+                    newSize.width /= 3;
+                    if (area === 'middle') newPos.x = window.innerWidth / 3;
+                    if (area === 'right') newPos.x = (window.innerWidth / 3) * 2;
+                    break;
+                case 'quadrants':
+                    newSize.width /= 2;
+                    newSize.height /= 2;
+                    if (area.includes('right')) newPos.x = window.innerWidth / 2;
+                    if (area.includes('bottom')) newPos.y = window.innerHeight / 2;
+                    break;
+            }
+            return { ...w, position: newPos, size: newSize };
           }
           return w;
         })
@@ -139,5 +282,5 @@ export function useWindows(apps: AppDefinition[], t: (key: string) => string) {
   }, []);
 
 
-  return { windows, openWindow, closeWindow, focusWindow, minimizeWindow, restoreAndFocusWindow, updateWindowState, closeAllWindows, toggleMaximizeWindow, removeWindow };
+  return { windows, openWindow, closeWindow, focusWindow, minimizeWindow, restoreAndFocusWindow, updateWindowState, closeAllWindows, toggleMaximizeWindow, removeWindow, finishMinimize, finishRestore, snapWindow, unsnapWindow, snapWindowToLayout, focusWindows };
 }

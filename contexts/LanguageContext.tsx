@@ -14,7 +14,7 @@ const LanguageContext = createContext<LanguageContextType | undefined>(undefined
 export const LanguageProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
   const [language, setLanguageState] = useState<Language>(() => {
     try {
-        const saved = localStorage.getItem('cjc5_language');
+        const saved = localStorage.getItem('gemini_os_language');
         return (saved as Language) || 'zh';
     } catch {
         return 'zh';
@@ -23,7 +23,7 @@ export const LanguageProvider: React.FC<{ children: ReactNode }> = ({ children }
 
   const setLanguage = useCallback((lang: Language) => {
     try {
-        localStorage.setItem('cjc5_language', lang);
+        localStorage.setItem('gemini_os_language', lang);
         setLanguageState(lang);
     } catch (e) {
         console.error("Failed to save language to localStorage", e);

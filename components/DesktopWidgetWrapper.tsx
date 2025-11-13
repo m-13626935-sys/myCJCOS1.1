@@ -19,7 +19,7 @@ const DesktopWidgetWrapper: React.FC<DesktopWidgetWrapperProps> = ({ children, i
 
     return (
         <div
-            className="absolute desktop-widget-wrapper group"
+            className="absolute desktop-widget-wrapper group animate-widget-drop"
             style={{
                 top: currentPosition.y,
                 left: currentPosition.x,

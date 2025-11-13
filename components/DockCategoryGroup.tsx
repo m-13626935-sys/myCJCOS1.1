@@ -42,6 +42,7 @@ const DockCategoryGroup: React.FC<DockCategoryGroupProps> = ({ category, apps, i
   };
 
   const categoryName = t(category);
+  const isAiCategory = category === 'category_ai';
 
   return (
     <div className="relative" ref={groupRef}>
@@ -75,7 +76,7 @@ const DockCategoryGroup: React.FC<DockCategoryGroupProps> = ({ category, apps, i
       )}
       <button
         onClick={onToggle}
-        className="jelly-button h-12 px-4"
+        className={`light-field-button h-12 px-4 ${isAiCategory ? 'ai-gradient-border' : ''}`}
         aria-label={`${t('aria_open_category')} ${categoryName}`}
         aria-expanded={isOpen}
       >
